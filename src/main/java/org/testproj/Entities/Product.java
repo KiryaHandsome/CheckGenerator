@@ -1,6 +1,7 @@
 package org.testproj.Entities;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Product {
     private int id;
@@ -63,6 +64,22 @@ public class Product {
                 ", isPromotional=" + isPromotional +
                 ", weight=" + weight +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+        return id == product.id
+                && Double.compare(product.price, price) == 0
+                && isPromotional == product.isPromotional
+                && Double.compare(product.weight, weight) == 0
+                && Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, isPromotional, weight);
     }
 
     public static class ProductBuilder {

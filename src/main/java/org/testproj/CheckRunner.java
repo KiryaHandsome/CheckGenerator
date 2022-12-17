@@ -21,7 +21,7 @@ public class CheckRunner {
                     .setId(i + 1)
                     .setName(names[i])
                     .setPrice(prices[i])
-                    .setWeight(88)
+                    .setWeight(weights[i])
                     .build());
         }
         List<Product> products = dao.getAll();
