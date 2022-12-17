@@ -3,7 +3,7 @@ package org.testproj.Entities;
 import java.util.Date;
 
 public class Product {
-    private long id;
+    private int id;
     private String name;
     private double price;
 
@@ -13,7 +13,7 @@ public class Product {
 
     public Product() {}
 
-    public Product(long id, String name, double price, double weight, Date expirationDate) {
+    public Product(int id, String name, double price, double weight, Date expirationDate) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -54,13 +54,13 @@ public class Product {
     }
 
     public static class ProductBuilder {
-        private long id;
+        private int id;
         private String name;
         private double price;
         private double weight;
         private Date expirationDate;
 
-        public ProductBuilder setId(long id) {
+        public ProductBuilder setId(int id) {
             this.id = id;
             return this;
         }
