@@ -8,27 +8,22 @@ public class Product {
     private double price;
     private boolean isPromotional;
 
-    //TODO: add weight and expiration date to database
+    //TODO: expiration date
+    //TODO:
     private double weight;
-    private Date expirationDate;
 
     public Product() {}
 
-    public Product(int id, String name, double price, boolean isPromotional, double weight, Date expirationDate) {
+    public Product(int id, String name, double price, boolean isPromotional, double weight) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.isPromotional = isPromotional;
         this.weight = weight;
-        this.expirationDate = expirationDate;
     }
 
     public double getWeight() {
         return weight;
-    }
-
-    public Date getExpirationDate() {
-        return expirationDate;
     }
 
     public long getId() {
@@ -47,6 +42,14 @@ public class Product {
         return price;
     }
 
+    public void setFields(Product other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.price = other.price;
+        this.isPromotional = other.isPromotional;
+        this.weight = other.weight;
+    }
+
     public ProductBuilder getBuilder() {
         return new ProductBuilder();
     }
@@ -57,6 +60,8 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", isPromotional=" + isPromotional +
+                ", weight=" + weight +
                 '}';
     }
 
@@ -66,7 +71,6 @@ public class Product {
         private double price;
         private boolean isPromotional;
         private double weight;
-        private Date expirationDate;
 
         public ProductBuilder setId(int id) {
             this.id = id;
@@ -88,11 +92,6 @@ public class Product {
             return this;
         }
 
-        public ProductBuilder setExpirationDate(Date expirationDate) {
-            this.expirationDate = expirationDate;
-            return this;
-        }
-
         public ProductBuilder setPrice(double price) {
             this.price = price;
             return this;
@@ -100,7 +99,7 @@ public class Product {
 
         public Product build() {
             return new Product(id, name, price, isPromotional,
-                    weight, expirationDate);
+                    weight);
         }
     }
 }

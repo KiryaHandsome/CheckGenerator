@@ -11,27 +11,31 @@ public class ProductDao implements Dao<Product> {
     private List<Product> products = new ArrayList<>();
 
     @Override
-    public Optional<Product> get(int id) {
-        return Optional.of(products.get(id));
+    public Product get(int id) {
+        return products.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<Product> getAll() {
-        return null;
+        return products;
     }
 
     @Override
     public void save(Product obj) {
-
+        products.add(obj);
     }
 
     @Override
-    public void update(Product obj, String[] params) {
-
+    public void update(Product obj, Product other) {
+        int index = products.indexOf(obj);
+        products.get(index).setFields(other);
     }
 
     @Override
     public void delete(Product product) {
-
+        products.remove(product);
     }
 }

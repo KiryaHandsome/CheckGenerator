@@ -16,6 +16,6 @@ test {
 }
 
 application {
-    mainClass = 'org.example.CheckRunner'
+    mainClass = 'org.testproj.CheckRunner'
 }
 

@@ -5,13 +5,13 @@ import java.util.Optional;
 
 public interface Dao<T> {
 
-    Optional<T> get(int id);
+    T get(int id);
 
     List<T> getAll();
 
     void save(T obj);
 
-    void update(T obj, String[] params);
+    void update(T obj, T other);
 
     void delete(T t);
 }
