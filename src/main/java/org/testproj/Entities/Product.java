@@ -6,17 +6,19 @@ public class Product {
     private int id;
     private String name;
     private double price;
+    private boolean isPromotional;
 
-    //TODO: add weight and expiration date to database and builder
+    //TODO: add weight and expiration date to database
     private double weight;
     private Date expirationDate;
 
     public Product() {}
 
-    public Product(int id, String name, double price, double weight, Date expirationDate) {
+    public Product(int id, String name, double price, boolean isPromotional, double weight, Date expirationDate) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.isPromotional = isPromotional;
         this.weight = weight;
         this.expirationDate = expirationDate;
     }
@@ -32,6 +34,11 @@ public class Product {
     public long getId() {
         return id;
     }
+
+    public boolean isPromotional() {
+        return isPromotional;
+    }
+
     public String getName() {
         return name;
     }
@@ -57,6 +64,7 @@ public class Product {
         private int id;
         private String name;
         private double price;
+        private boolean isPromotional;
         private double weight;
         private Date expirationDate;
 
@@ -70,12 +78,19 @@ public class Product {
             return this;
         }
 
-        public void setWeight(double weight) {
+        public ProductBuilder setWeight(double weight) {
             this.weight = weight;
+            return this;
         }
 
-        public void setExpirationDate(Date expirationDate) {
+        public ProductBuilder setPromotional(boolean promotional) {
+            isPromotional = promotional;
+            return this;
+        }
+
+        public ProductBuilder setExpirationDate(Date expirationDate) {
             this.expirationDate = expirationDate;
+            return this;
         }
 
         public ProductBuilder setPrice(double price) {
@@ -84,7 +99,7 @@ public class Product {
         }
 
         public Product build() {
-            return new Product(id, name, price,
+            return new Product(id, name, price, isPromotional,
                     weight, expirationDate);
         }
     }
