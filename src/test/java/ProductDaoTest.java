@@ -1,15 +1,12 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.testproj.CheckRunner;
-import org.testproj.Dao.Dao;
 import org.testproj.Dao.ProductDao;
 import org.testproj.Entities.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class CheckRunnerTest {
+public class ProductDaoTest {
     public String[] names = new String[]{"Milk", "Beans", "Sausages",
             "Serials", "Beef", "Rolton", "Lay's", "M&M's", "Dumplings", "Ham"};
     public double[] prices = new double[]{18.77, 15.19, 99.99, 66.13, 12.11,

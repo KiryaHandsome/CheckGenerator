@@ -4,6 +4,7 @@ import org.testproj.Dao.ProductDao;
 import org.testproj.Entities.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CheckRunner {
     public static String[] names = new String[]{"Milk", "Beans", "Sausages",
@@ -45,6 +46,5 @@ public class CheckRunner {
         for (Product p : products) {
             System.out.println(p);
         }
-        //System.out.println("Hello world!");
     }
 }
