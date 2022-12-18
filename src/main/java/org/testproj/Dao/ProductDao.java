@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: implement all methods
+//TODO: implement all methods for database
 public class ProductDao implements Dao<Product> {
     private List<Product> products = new ArrayList<>();
 
@@ -16,11 +16,6 @@ public class ProductDao implements Dao<Product> {
                 .filter(p -> p.getId() == id)
                 .findFirst()
                 .orElse(null);
-    }
-
-    @Override
-    public List<Product> getAll() {
-        return products;
     }
 
     @Override
