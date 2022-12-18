@@ -9,8 +9,7 @@ public class Product {
     private double price;
     private boolean isPromotional;
 
-    //TODO: expiration date
-    //TODO:
+    //TODO: add and configure expiration date
     private double weight;
 
     public Product() {}

@@ -16,35 +16,25 @@ public class CheckRunner {
 
     public static void main(String[] args) {
         ProductDao dao = new ProductDao();
+        CheckGenerator checkGenerator = new CheckGenerator(dao);
 
-        for (int i = 0; i < names.length; i++) {
-            dao.save(new Product().getBuilder()
-                    .setId(i + 1)
-                    .setName(names[i])
-                    .setPrice(prices[i])
-                    .setWeight(weights[i])
-                    .build());
+        // TODO: unpack arguments
+
+        try {
+            for (String s : args) {
+                System.out.println(s);
+                String[] productData = s.split("-");
+                if (productData[0].equals("card")) { // discount card presentation
+                    int discountCardId = Integer.parseInt(productData[1]);
+                    checkGenerator.setDiscountCardId(discountCardId);
+                } else {
+                    int productId = Integer.parseInt(productData[0]);
+                    int quantity = Integer.parseInt(productData[1]);
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        List<Product> products = dao.getAll();
-        for (Product p : products) {
-            System.out.println(p);
-        }
-        System.out.println("------------------------------------");
-        Product pr = new Product().getBuilder()
-                .setId(199)
-                .setName("Perfume")
-                .setPrice(123)
-                .setPromotional(true)
-                .setWeight(9999)
-                .build();
-        dao.update(dao.get(1), pr);
-        for (Product p : products) {
-            System.out.println(p);
-        }
-        System.out.println("------------------------------------");
-        dao.delete(dao.get(2));
-        for (Product p : products) {
-            System.out.println(p);
-        }
+
     }
 }
