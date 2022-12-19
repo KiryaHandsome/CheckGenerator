@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
+
+//TODO: add and configure expiration date
 @Entity
 @Table(name = "product")
 public class Product {
@@ -13,8 +15,6 @@ public class Product {
     private String name;
     private double price;
     private boolean isPromotional;
-
-    //TODO: add and configure expiration date
     private double weight;
 
     public Product() {}
@@ -50,14 +50,6 @@ public class Product {
     public double getPrice() {
         return price;
     }
-
-//    public void setFields(Product other) {
-//        this.id = other.id;
-//        this.name = other.name;
-//        this.price = other.price;
-//        this.isPromotional = other.isPromotional;
-//        this.weight = other.weight;
-//    }
 
     public ProductBuilder getBuilder() {
         return new ProductBuilder();
