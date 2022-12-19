@@ -10,11 +10,16 @@ import java.util.Objects;
 @Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "price")
     private double price;
+    @Column(name = "is_promotional")
     private boolean isPromotional;
+    @Column(name = "weight")
     private double weight;
 
     public Product() {}

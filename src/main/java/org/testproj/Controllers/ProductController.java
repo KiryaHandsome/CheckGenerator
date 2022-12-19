@@ -12,6 +12,7 @@ import org.testproj.Services.ShopService;
 
 import java.util.List;
 
+//TODO: implement all methods
 @RestController
 @RequestMapping("/")
 public class ProductController {
