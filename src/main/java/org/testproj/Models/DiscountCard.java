@@ -1,7 +1,9 @@
 package org.testproj.Models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Proxy;
 
+@Proxy(lazy=false)   //solution for LazyInitializationException
 @Entity
 @Table(name = "discount_card")
 public class DiscountCard {

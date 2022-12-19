@@ -6,7 +6,6 @@ import org.hibernate.annotations.Proxy;
 import java.util.Objects;
 
 
-//TODO: add and configure expiration date
 @Proxy(lazy=false)   //solution for LazyInitializationException
 @Entity
 @Table(name = "product")

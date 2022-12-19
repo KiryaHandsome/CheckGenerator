@@ -1,14 +1,10 @@
 package org.testproj;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.testproj.Check.CheckParser;
+import org.testproj.Check.CheckGenerator;
 import org.testproj.Models.Product;
-import org.testproj.Services.Implementations.DiscountCardService;
-import org.testproj.Services.Implementations.ProductService;
 
 import java.util.Map;
 
@@ -16,23 +12,20 @@ import java.util.Map;
 public class CommandLineParser implements CommandLineRunner {
     //private static Logger LOG = LoggerFactory.getLogger(CheckRunner.class);
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private DiscountCardService discountCardService;
+    private CheckGenerator checkGenerator;
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Start of cmd args parsing...");
-        Map<Integer, Integer> map = CheckParser.parseCmdArgs(args);
-        for(Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            if(pair.getKey() == 0) {
-
-            } else {
-
-            }
+        try {
+            Map<Integer, Integer> map = checkGenerator.parseArguments(args);
+            Map<Product, Integer> info = checkGenerator.getProductsFromDb(map);
+            String check = checkGenerator.generateCheck(info);
+            System.out.println(check);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage()); // use logger?
         }
-        Product p = productService.find(1);
-        System.out.println(p);
+
     }
 
 

@@ -9,21 +9,21 @@ import org.testproj.Services.AbstractShopService;
 
 @Service
 public class DiscountCardService extends AbstractShopService<DiscountCard> {
-    private DiscountCardRepository discountCardRepository;
+    //private DiscountCardRepository discountCardRepository;
 
     @Autowired
     public DiscountCardService(DiscountCardRepository discountCardRepository) {
-        this.discountCardRepository = discountCardRepository;
+        super(discountCardRepository);
     }
 
     public DiscountCard update(int id, DiscountCard object) {
         object.setId(id);
-        return discountCardRepository.save(object);
+        return repository.save(object);
     }
 
     public void delete(int id) {
         DiscountCard card = new DiscountCard();
         card.setId(id);
-        discountCardRepository.delete(card);
+        repository.delete(card);
     }
 }
