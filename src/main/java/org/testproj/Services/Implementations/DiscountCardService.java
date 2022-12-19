@@ -1,42 +1,29 @@
 package org.testproj.Services.Implementations;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.testproj.Models.Product;
-import org.testproj.Services.ShopService;
+import org.testproj.Models.DiscountCard;
+import org.testproj.Repositories.DiscountCardRepository;
+import org.testproj.Services.AbstractShopService;
 
-import java.util.List;
-
-//TODO: implement methods
 @Service
-public class DiscountCardService implements ShopService {
-    @Override
-    public Product find(int id) {
-        return null;
+public class DiscountCardService extends AbstractShopService<DiscountCard> {
+    private DiscountCardRepository discountCardRepository;
+
+    @Autowired
+    public DiscountCardService(DiscountCardRepository discountCardRepository) {
+        this.discountCardRepository = discountCardRepository;
     }
 
-    @Override
-    public List<Product> findAll() {
-        return null;
+    public DiscountCard update(int id, DiscountCard object) {
+        object.setId(id);
+        return discountCardRepository.save(object);
     }
 
-    @Override
-    public Product create(Product object) {
-        return null;
-    }
-
-    @Override
-    public Product update(int id, Product object) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAll() {
-        return false;
+    public void delete(int id) {
+        DiscountCard card = new DiscountCard();
+        card.setId(id);
+        discountCardRepository.delete(card);
     }
 }
