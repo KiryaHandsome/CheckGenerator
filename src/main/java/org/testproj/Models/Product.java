@@ -1,9 +1,14 @@
-package org.testproj.Entities;
+package org.testproj.Models;
 
-import java.util.Date;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "product")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private double price;
@@ -20,6 +25,10 @@ public class Product {
         this.price = price;
         this.isPromotional = isPromotional;
         this.weight = weight;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getWeight() {
@@ -42,13 +51,13 @@ public class Product {
         return price;
     }
 
-    public void setFields(Product other) {
-        this.id = other.id;
-        this.name = other.name;
-        this.price = other.price;
-        this.isPromotional = other.isPromotional;
-        this.weight = other.weight;
-    }
+//    public void setFields(Product other) {
+//        this.id = other.id;
+//        this.name = other.name;
+//        this.price = other.price;
+//        this.isPromotional = other.isPromotional;
+//        this.weight = other.weight;
+//    }
 
     public ProductBuilder getBuilder() {
         return new ProductBuilder();
@@ -87,6 +96,16 @@ public class Product {
         private double price;
         private boolean isPromotional;
         private double weight;
+
+        public ProductBuilder() { }
+
+        public ProductBuilder(Product product) {
+            this.id = product.id;
+            this.name = String.valueOf(product.name);
+            this.price = product.price;
+            this.isPromotional = product.isPromotional;
+            this.weight = product.weight;
+        }
 
         public ProductBuilder setId(int id) {
             this.id = id;

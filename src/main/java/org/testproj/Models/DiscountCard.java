@@ -1,8 +1,16 @@
-package org.testproj.Entities;
+package org.testproj.Models;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "discount_card")
 public class DiscountCard {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private float discount;
+
+    public DiscountCard() { }
 
     public DiscountCard(long id, float discount) {
         this.id = id;
