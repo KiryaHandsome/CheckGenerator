@@ -1,11 +1,13 @@
 package org.testproj.Models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Proxy;
 
 import java.util.Objects;
 
 
 //TODO: add and configure expiration date
+@Proxy(lazy=false)   //solution for LazyInitializationException
 @Entity
 @Table(name = "product")
 public class Product {
@@ -19,26 +21,20 @@ public class Product {
     private double price;
     @Column(name = "is_promotional")
     private boolean isPromotional;
-    @Column(name = "weight")
-    private double weight;
 
     public Product() {}
 
-    public Product(int id, String name, double price, boolean isPromotional, double weight) {
+    public Product(int id, String name, double price, boolean isPromotional) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.isPromotional = isPromotional;
-        this.weight = weight;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public double getWeight() {
-        return weight;
-    }
 
     public long getId() {
         return id;
@@ -67,7 +63,6 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", isPromotional=" + isPromotional +
-                ", weight=" + weight +
                 '}';
     }
 
@@ -78,13 +73,12 @@ public class Product {
         return id == product.id
                 && Double.compare(product.price, price) == 0
                 && isPromotional == product.isPromotional
-                && Double.compare(product.weight, weight) == 0
                 && Objects.equals(name, product.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price, isPromotional, weight);
+        return Objects.hash(id, name, price, isPromotional);
     }
 
     public static class ProductBuilder {
@@ -92,7 +86,6 @@ public class Product {
         private String name;
         private double price;
         private boolean isPromotional;
-        private double weight;
 
         public ProductBuilder() { }
 
@@ -101,7 +94,6 @@ public class Product {
             this.name = String.valueOf(product.name);
             this.price = product.price;
             this.isPromotional = product.isPromotional;
-            this.weight = product.weight;
         }
 
         public ProductBuilder setId(int id) {
@@ -111,11 +103,6 @@ public class Product {
 
         public ProductBuilder setName(String name) {
             this.name = name;
-            return this;
-        }
-
-        public ProductBuilder setWeight(double weight) {
-            this.weight = weight;
             return this;
         }
 
@@ -130,8 +117,7 @@ public class Product {
         }
 
         public Product build() {
-            return new Product(id, name, price, isPromotional,
-                    weight);
+            return new Product(id, name, price, isPromotional);
         }
     }
 }
