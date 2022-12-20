@@ -11,10 +11,8 @@ import org.testproj.Services.Implementations.ProductService;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -141,17 +139,17 @@ public class CheckGenerator {
         return (int) Math.log10(num) + 1;
     }
 
-    private static String getSpaces(int checkWidth, String s) {
+    private static String getSpacesToPlaceInCenter(int checkWidth, String s) {
         return " ".repeat((checkWidth - s.length()) / 2);
     }
 
     private static String headerText(int checkWidth) {
         StringBuilder builder = new StringBuilder();
-        String checkSpaces = getSpaces(checkWidth, "CASH RECEIPT");
+        String checkSpaces = getSpacesToPlaceInCenter(checkWidth, "CASH RECEIPT");
         builder.append(checkSpaces)
                 .append("CASH RECEIPT")
                 .append(checkSpaces + '\n');
-        String companySpaces = getSpaces(checkWidth, "Clevertec SHOP");
+        String companySpaces = getSpacesToPlaceInCenter(checkWidth, "Clevertec SHOP");
         builder.append(companySpaces)
                 .append("Clevertec SHOP")
                 .append(companySpaces + '\n');
