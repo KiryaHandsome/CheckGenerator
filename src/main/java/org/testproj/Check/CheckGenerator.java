@@ -9,6 +9,9 @@ import org.testproj.Models.Product;
 import org.testproj.Services.Implementations.DiscountCardService;
 import org.testproj.Services.Implementations.ProductService;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -58,33 +61,26 @@ public class CheckGenerator {
     }
 
     //TODO: implement
-    public Map<Product, Integer> getProductsFromDb(Map<Integer, Integer> info) {
+    public Map<Product, Integer> getProductsFromDb(Map<Integer, Integer> info)
+            throws DiscountCardAlreadyPresentedException {
         Map<Product, Integer> map = new HashMap<>();
-        try {
-            for (Map.Entry<Integer, Integer> pair : info.entrySet()) {
-                int id = pair.getKey();
-                int quantity = pair.getValue();
-                if (id == 0) {    //is discount card
-                    if (discountCard != null) {
-                        throw new DiscountCardAlreadyPresentedException(
-                                "There are few discount cards in arguments");
-                    }
-                    discountCard = discountCardService.find(pair.getValue());
-                    System.out.println(discountCard); //log
-                    System.out.println("Discount = " + discountCard.getDiscount());//log
-                } else {
-                    Product product = productService.find(id);
-                    //get max lengths to shape check
-                    maxQuantityLength = Math.max(maxQuantityLength, numberOfDigits(quantity));
-                    maxNameLength = Math.max(maxNameLength, product.getName().length());
-                    maxPriceLength = Math.max(maxPriceLength, numberOfDigits((int) product.getPrice()));
-                    map.put(product, quantity);
-                    System.out.println(product); //log
-                    System.out.println("Quantity = " + quantity);//log
+        for (Map.Entry<Integer, Integer> pair : info.entrySet()) {
+            int id = pair.getKey();
+            int quantity = pair.getValue();
+            if (id == 0) {    //is discount card
+                if (discountCard != null) {
+                    throw new DiscountCardAlreadyPresentedException(
+                            "There are few discount cards in arguments");
                 }
+                discountCard = discountCardService.find(pair.getValue());
+            } else {
+                Product product = productService.find(id);
+                //get max lengths to shape check
+                maxQuantityLength = Math.max(maxQuantityLength, numberOfDigits(quantity));
+                maxNameLength = Math.max(maxNameLength, product.getName().length());
+                maxPriceLength = Math.max(maxPriceLength, numberOfDigits((int) product.getPrice()));
+                map.put(product, quantity);
             }
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
         }
         productAndQuantity = map;
         return map;
@@ -100,8 +96,8 @@ public class CheckGenerator {
         StringBuilder builder = new StringBuilder();
         builder.append("%-" + qtyWidth + "s")
                 .append("%" + descriptionWidth + "s  ")
-                .append("%-" + isPromotionalWidth + "s")
-                .append("%" + priceWidth + "s")
+                .append("%" + isPromotionalWidth + "s")
+                .append("%" + priceWidth + "s ")
                 .append("%" + totalWidth + "s");
         String template = builder.toString();
         StringBuilder checkBase = new StringBuilder();
@@ -118,29 +114,24 @@ public class CheckGenerator {
             totalCost += resultPrice;
             checkBase.append(String.format(template, qty, p.getName(),
                     isProm ? "y" : "n",
-                    p.getPrice(),
-                    resultPrice + "\n"));
+                    Math.round(p.getPrice() * 100.0) / 100.0,
+                    Math.round(resultPrice * 100.0) / 100.0 + "\n"));
         }
         checkBase.append("*".repeat(checkWidth) + "\n"); //delimiter
         checkBase.append(String.format("COST:%" +
                 (checkWidth - 5) + ".2f\n", totalCost));  //5-len of 'cost:' string
         if (discountCard != null) {
             checkBase.append(String.format("DISCOUNT:%" +
-                    (checkWidth - 10) + "d%%\n", (int)(discountCard.getDiscount() * 100))); //9-len of 'discount:%'string
+                    (checkWidth - 10) + "d%%\n", (int)(discountCard.getDiscount() * 100))); //10-len of 'discount:%'string
             totalCost = totalCost * (1 - discountCard.getDiscount());
+        } else {
+            checkBase.append(String.format("DISCOUNT:%" +
+                    (checkWidth - 10) + "d%%\n", 0)); //10-len of 'discount:%'string
         }
         checkBase.append(String.format("TOTAL COST:%" +
                 (checkWidth - 11) + ".2f\n", totalCost));  //11-len of 'total cost:' string
         check = checkBase.toString();
         return check;
-    }
-
-    private static int numberOfDigits(int num) {
-        return (int) Math.log10(num) + 1;
-    }
-
-    private static String getSpacesToPlaceInCenter(int checkWidth, String s) {
-        return " ".repeat((checkWidth - s.length()) / 2);
     }
 
     private static String headerText(int checkWidth) {
@@ -159,6 +150,24 @@ public class CheckGenerator {
         String formattedTime = LocalTime.now().format(formatter);
         builder.append(String.format("%" + (checkWidth - 13)  + "s %s\n", "Date:", formattedDate))
                 .append(String.format("%" + (checkWidth - 13)  + "s %s\n\n", "Time:", formattedTime));
+        builder.append("PROM. - promotional product;\n")
+                .append("If quantity of promotional product > 5 \n" +
+                        "then u get discount 10% on this position!\n");
         return builder.toString();
+    }
+
+
+    private static int numberOfDigits(int num) {
+        return (int) Math.log10(num) + 1;
+    }
+
+    private static String getSpacesToPlaceInCenter(int checkWidth, String s) {
+        return " ".repeat((checkWidth - s.length()) / 2);
+    }
+
+    public void saveCheckToFile(String fileName) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        writer.write(check);
+        writer.close();
     }
 }

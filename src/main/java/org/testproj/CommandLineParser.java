@@ -16,14 +16,14 @@ public class CommandLineParser implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Start of cmd args parsing...");
         try {
             Map<Integer, Integer> map = checkGenerator.parseArguments(args);
             Map<Product, Integer> info = checkGenerator.getProductsFromDb(map);
             String check = checkGenerator.generateCheck(info);
             System.out.println(check);
+            checkGenerator.saveCheckToFile("check.txt");
         } catch (Exception ex) {
-            System.out.println(ex.getMessage()); // use logger?
+            System.out.println(ex.getMessage());
         }
 
     }
