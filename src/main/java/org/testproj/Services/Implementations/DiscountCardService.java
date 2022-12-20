@@ -9,8 +9,6 @@ import org.testproj.Services.AbstractShopService;
 
 @Service
 public class DiscountCardService extends AbstractShopService<DiscountCard> {
-    //private DiscountCardRepository discountCardRepository;
-
     @Autowired
     public DiscountCardService(DiscountCardRepository discountCardRepository) {
         super(discountCardRepository);

@@ -22,10 +22,15 @@ import java.util.Optional;
 
 @Component
 public class CheckGenerator {
+    final private ProductService productService;
+    final private DiscountCardService discountCardService;
+
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private DiscountCardService discountCardService;
+    public CheckGenerator(ProductService productService,
+                          DiscountCardService discountCardService) {
+        this.productService = productService;
+        this.discountCardService = discountCardService;
+    }
 
     private Map<Product, Integer> productAndQuantity;
     private DiscountCard discountCard;
@@ -119,7 +124,7 @@ public class CheckGenerator {
                 (checkWidth - 5) + ".2f\n", totalCost));  //5-len of 'cost:' string
         int argument;
         if (discountCard != null) {
-            argument = (int)(discountCard.getDiscount() * 100);
+            argument = (int) (discountCard.getDiscount() * 100);
             totalCost = totalCost * (1 - discountCard.getDiscount());
         } else {
             argument = 0;
@@ -146,8 +151,8 @@ public class CheckGenerator {
         String formattedDate = LocalDate.now().format(formatter);
         formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         String formattedTime = LocalTime.now().format(formatter);
-        builder.append(String.format("%" + (checkWidth - 13)  + "s %s\n", "Date:", formattedDate))
-                .append(String.format("%" + (checkWidth - 13)  + "s %s\n\n", "Time:", formattedTime));
+        builder.append(String.format("%" + (checkWidth - 13) + "s %s\n", "Date:", formattedDate))
+                .append(String.format("%" + (checkWidth - 13) + "s %s\n\n", "Time:", formattedTime));
         builder.append("PROM. - promotional product;\n")
                 .append("If quantity of promotional product > 5 \n" +
                         "then u get discount 10% on this position!\n\n");
