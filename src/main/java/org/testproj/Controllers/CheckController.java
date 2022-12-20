@@ -27,20 +27,6 @@ public class CheckController {
         this.checkGenerator = checkGenerator;
     }
 
-//    @GetMapping
-//    public String all(@RequestParam("itemId") String id, @RequestParam("quantity") String quantity) {
-//        String args = id + "-" + quantity;
-//        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-//        try {
-//            Map<Product, Integer> info = checkGenerator.getProductsFromDb(map);
-//            checkGenerator.generateCheck(info);
-//            checkGenerator.saveCheckToFile("check.txt");
-//        } catch (DiscountCardAlreadyPresentedException | IOException e) {
-//            return e.getMessage();
-//        }
-//        return checkGenerator.getCheck();
-//    }
-
     @GetMapping
     public String getCheck(@RequestParam Map<String,String> allParams) {
         String[] args = allParams.entrySet()
