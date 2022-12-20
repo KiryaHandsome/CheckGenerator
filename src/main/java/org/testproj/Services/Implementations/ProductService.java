@@ -16,7 +16,6 @@ public class ProductService extends AbstractShopService<Product> {
 
     public Product update(int id, Product object) {
         object.setId(id);
-
         return repository.save(object);
     }
 

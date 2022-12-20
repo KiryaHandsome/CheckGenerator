@@ -8,8 +8,10 @@ import org.hibernate.annotations.Proxy;
 @Table(name = "discount_card")
 public class DiscountCard {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+    @Column(name = "discount")
     private float discount;
 
     public DiscountCard() { }
