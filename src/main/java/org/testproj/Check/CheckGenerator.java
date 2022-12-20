@@ -34,8 +34,6 @@ public class CheckGenerator {
     private int maxQuantityLength;
     private String check;
 
-    //private Map<Integer, Integer> map = new HashMap<>();
-
     public Map<Integer, Integer> parseArguments(String... args) {
         Map<Integer, Integer> map = new HashMap<>();
         for (String arg : args) {
@@ -60,7 +58,6 @@ public class CheckGenerator {
         return map;
     }
 
-    //TODO: implement
     public Map<Product, Integer> getProductsFromDb(Map<Integer, Integer> info)
             throws DiscountCardAlreadyPresentedException {
         Map<Product, Integer> map = new HashMap<>();
@@ -120,14 +117,15 @@ public class CheckGenerator {
         checkBase.append("*".repeat(checkWidth) + "\n"); //delimiter
         checkBase.append(String.format("COST:%" +
                 (checkWidth - 5) + ".2f\n", totalCost));  //5-len of 'cost:' string
+        int argument;
         if (discountCard != null) {
-            checkBase.append(String.format("DISCOUNT:%" +
-                    (checkWidth - 10) + "d%%\n", (int)(discountCard.getDiscount() * 100))); //10-len of 'discount:%'string
+            argument = (int)(discountCard.getDiscount() * 100);
             totalCost = totalCost * (1 - discountCard.getDiscount());
         } else {
-            checkBase.append(String.format("DISCOUNT:%" +
-                    (checkWidth - 10) + "d%%\n", 0)); //10-len of 'discount:%'string
+            argument = 0;
         }
+        checkBase.append(String.format("DISCOUNT:%" +
+                (checkWidth - 10) + "d%%\n", argument)); //10-len of 'discount:%'string
         checkBase.append(String.format("TOTAL COST:%" +
                 (checkWidth - 11) + ".2f\n", totalCost));  //11-len of 'total cost:' string
         check = checkBase.toString();
@@ -152,10 +150,9 @@ public class CheckGenerator {
                 .append(String.format("%" + (checkWidth - 13)  + "s %s\n\n", "Time:", formattedTime));
         builder.append("PROM. - promotional product;\n")
                 .append("If quantity of promotional product > 5 \n" +
-                        "then u get discount 10% on this position!\n");
+                        "then u get discount 10% on this position!\n\n");
         return builder.toString();
     }
-
 
     private static int numberOfDigits(int num) {
         return (int) Math.log10(num) + 1;
@@ -169,5 +166,9 @@ public class CheckGenerator {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         writer.write(check);
         writer.close();
+    }
+
+    public String getCheck() {
+        return check;
     }
 }

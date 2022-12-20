@@ -51,6 +51,18 @@ public class Product {
         return price;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPromotional(boolean promotional) {
+        isPromotional = promotional;
+    }
+
     public ProductBuilder getBuilder() {
         return new ProductBuilder();
     }
