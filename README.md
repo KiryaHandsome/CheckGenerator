@@ -38,9 +38,9 @@ Implemented rest api with next methods:
 | `/products` | `GET` | return all products | `none` |
 | `/product/{id}` | `GET` | return product by `id` | `id` |
 | `/products/{id}` | `DELETE` | delete product by `id` | `id` |
-| `/check?args` | `GET` | shape check according arguments | arguments in format id=qty and/or card=id|
-| `/product/create` | `POST` | add product |  |
-| `/discount-card/{id}` | `GET` | return discount card by id |  |
-| `/discount-cards` | `GET` | return all discount cards |  |
-| `/discount-card/{id}` | `DELETE` | delete discount card by id |  |
-| `/discount-card/create` | `POST` | add discount card |  |
+| `/check?args` | `GET` | shape check according arguments | arguments in format id=qty and card=id(optional) |
+| `/product/create` | `POST` | add product | request body with fields: `name`, `price`, `isPromotional` |
+| `/discount-card/{id}` | `GET` | return discount card by id | `id` |
+| `/discount-cards` | `GET` | return all discount cards | `none` |
+| `/discount-card/{id}` | `DELETE` | delete discount card by id | `id` |
+| `/discount-card/create` | `POST` | add discount card | request body with field `discount` |
