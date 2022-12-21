@@ -48,7 +48,7 @@ public class CheckGenerator {
             }
             if (values[0].equals("card")) {
                 int discountCardId = Integer.parseInt(values[1]);
-                map.put(0, discountCardId);
+                map.put(discountCardId, 0);
             } else {
                 int productId = Integer.parseInt(values[0]);
                 int quantity = Integer.parseInt(values[1]);
@@ -69,12 +69,12 @@ public class CheckGenerator {
         for (Map.Entry<Integer, Integer> pair : info.entrySet()) {
             int id = pair.getKey();
             int quantity = pair.getValue();
-            if (id == 0) {    //is discount card
+            if (quantity == 0) {    //is discount card
                 if (discountCard != null) {
                     throw new DiscountCardAlreadyPresentedException(
                             "There are few discount cards in arguments");
                 }
-                discountCard = discountCardService.find(pair.getValue());
+                discountCard = discountCardService.find(id);
             } else {
                 Product product = productService.find(id);
                 //get max lengths to shape check
