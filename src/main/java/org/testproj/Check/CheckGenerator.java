@@ -39,7 +39,8 @@ public class CheckGenerator {
     private int maxQuantityLength;
     private String check;
 
-    public Map<Integer, Integer> parseArguments(String... args) {
+    public Map<Integer, Integer> parseArguments(String... args)
+            throws DiscountCardAlreadyPresentedException {
         Map<Integer, Integer> map = new HashMap<>();
         for (String arg : args) {
             String[] values = arg.split("-");
@@ -47,17 +48,19 @@ public class CheckGenerator {
                 throw new InvalidParameterException("Invalid argument in command line.");
             }
             if (values[0].equals("card")) {
-                int discountCardId = Integer.parseInt(values[1]);
-                map.put(discountCardId, 0);
+                if(discountCard != null) {
+                    throw new DiscountCardAlreadyPresentedException(
+                            "There are few discount cards in arguments");
+                }
+                discountCard = discountCardService.find(Integer.parseInt(values[1]));
             } else {
                 int productId = Integer.parseInt(values[0]);
                 int quantity = Integer.parseInt(values[1]);
                 if (productId == 0 || quantity == 0) {
                     throw new InvalidParameterException("Id and quantity must be greater than 0.");
                 }
-                //case when map's already got this product
                 int previousQuantity = Optional.ofNullable(map.get(productId)).orElse(0);
-                map.put(productId, previousQuantity + quantity);
+                map.put(productId, previousQuantity + quantity);  //case when map already got this product
             }
         }
         return map;
@@ -69,20 +72,12 @@ public class CheckGenerator {
         for (Map.Entry<Integer, Integer> pair : info.entrySet()) {
             int id = pair.getKey();
             int quantity = pair.getValue();
-            if (quantity == 0) {    //is discount card
-                if (discountCard != null) {
-                    throw new DiscountCardAlreadyPresentedException(
-                            "There are few discount cards in arguments");
-                }
-                discountCard = discountCardService.find(id);
-            } else {
-                Product product = productService.find(id);
-                //get max lengths to shape check
-                maxQuantityLength = Math.max(maxQuantityLength, numberOfDigits(quantity));
-                maxNameLength = Math.max(maxNameLength, product.getName().length());
-                maxPriceLength = Math.max(maxPriceLength, numberOfDigits((int) product.getPrice()));
-                map.put(product, quantity);
-            }
+            Product product = productService.find(id);
+            //get max lengths to shape check
+            maxQuantityLength = Math.max(maxQuantityLength, numberOfDigits(quantity));
+            maxNameLength = Math.max(maxNameLength, product.getName().length());
+            maxPriceLength = Math.max(maxPriceLength, numberOfDigits((int) product.getPrice()));
+            map.put(product, quantity);
         }
         productAndQuantity = map;
         return map;
@@ -175,5 +170,13 @@ public class CheckGenerator {
 
     public String getCheck() {
         return check;
+    }
+
+    public DiscountCard getDiscountCard() {
+        return discountCard;
+    }
+
+    public void clearFields() {
+        discountCard = null;
     }
 }

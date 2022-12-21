@@ -26,7 +26,8 @@ public class CheckController {
     }
 
     @GetMapping
-    public String getCheck(@RequestParam Map<String, String> allParams) {
+    public String getCheck(@RequestParam Map<String, String> allParams)
+            throws DiscountCardAlreadyPresentedException {
         String[] args = allParams.entrySet()
                 .stream()
                 .map(e -> e.getKey() + "-" + e.getValue())
