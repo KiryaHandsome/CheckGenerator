@@ -1,10 +1,12 @@
 package org.testproj.Check;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.testproj.Check.CheckGenerator;
 import org.testproj.Exceptions.DiscountCardAlreadyPresentedException;
 import org.testproj.Models.DiscountCard;
@@ -12,6 +14,7 @@ import org.testproj.Models.Product;
 import org.testproj.Services.Implementations.DiscountCardService;
 import org.testproj.Services.Implementations.ProductService;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,13 +38,13 @@ public class CheckGeneratorTest {
             throws DiscountCardAlreadyPresentedException {
         String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "card-12"};
         checkGenerator.clearFields();
-        Map<Integer, Integer> map =  checkGenerator.parseArguments(args);
+        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
         Map<Integer, Integer> expected = new HashMap<>();
         expected.put(12, 34);
         expected.put(1, 1);
         expected.put(2, 3);
         expected.put(4, 5);
-        for(Map.Entry<Integer, Integer> pair : map.entrySet()) {
+        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
             int key = pair.getKey();
             assertTrue(expected.containsKey(key));
             int value1 = pair.getValue();
@@ -53,16 +56,16 @@ public class CheckGeneratorTest {
     @Test
     public void parseCmdArgumentsWithRepeatingKeysTest()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5","card-12"};
+        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
         checkGenerator.clearFields();
-        Map<Integer, Integer> map =  checkGenerator.parseArguments(args);
+        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
         discountCard = discountCardService.find(12);
         Map<Integer, Integer> expected = new HashMap<>();
         expected.put(12, 34);
         expected.put(1, 1);
         expected.put(2, 3);
         expected.put(4, 10);
-        for(Map.Entry<Integer, Integer> pair : map.entrySet()) {
+        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
             int key = pair.getKey();
             assertTrue(expected.containsKey(key));
             int value1 = expected.get(key);
@@ -73,27 +76,61 @@ public class CheckGeneratorTest {
 
     @Test
     public void parseCmdArgumentsWithFewDiscountCardsTest() throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5","card-12", "card-58"};
+        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12", "card-58"};
         assertThrows(
-                DiscountCardAlreadyPresentedException.class, () -> {checkGenerator.parseArguments(args); }
+                DiscountCardAlreadyPresentedException.class, () -> {
+                    checkGenerator.parseArguments(args);
+                }
         );
+    }
+
+    @Test
+    public void parseCmdArgumentsWithInvalidParametersTest()
+            throws DiscountCardAlreadyPresentedException {
+        String[] args = new String[]{"12-34", "1-1", "2-2", "4-5", "4-5", "cardjjj", "card-58"};
+        assertThrows(
+                InvalidParameterException.class, () -> {
+                    checkGenerator.parseArguments(args);
+                }
+        );
+    }
+
+    @Test
+    public void parseCmdArgumentsWithInvalidTest() {
+        String[] args = new String[]{"12-34", "1-1", "2-2", "4-5", "4-5", "cardjjj", "card-58"};
+        assertThrows(
+                InvalidParameterException.class, () -> {
+                    checkGenerator.parseArguments(args);
+                }
+        );
+    }
+
+    @Test
+    public void getProductsFromDbWithInvalidId()
+            throws DiscountCardAlreadyPresentedException {
+        String[] args = new String[]{"99999-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
+        checkGenerator.clearFields();
+        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
+        assertThrows(JpaObjectRetrievalFailureException.class, () -> {
+            checkGenerator.getProductsFromDb(map);
+        });
     }
 
     @Test
     public void getProductsFromDbTest()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5","card-12"};
+        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
         Map<Integer, Integer> map = checkGenerator.parseArguments(args);
         assertNotNull(discountCardService);
         assertNotNull(productService);
         discountCard = discountCardService.find(12);
         Map<Product, Integer> expected = new HashMap<>();
-        for(Map.Entry<Integer, Integer> pair : map.entrySet()) {
+        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
             expected.put(productService.find(pair.getKey()), pair.getValue());
         }
         try {
             Map<Product, Integer> result = checkGenerator.getProductsFromDb(map);
-            for(Map.Entry<Product, Integer> pair : result.entrySet()) {
+            for (Map.Entry<Product, Integer> pair : result.entrySet()) {
                 Product key = pair.getKey();
                 assertTrue(expected.containsKey(key));
                 int value1 = pair.getValue();
@@ -109,18 +146,18 @@ public class CheckGeneratorTest {
     @Test
     public void getProductsFromDbWithNotOneDiscountCardTest()
             throws DiscountCardAlreadyPresentedException {
-        //assertNotNull(discountCardService);
-        //assertNotNull(productService);
+        assertNotNull(discountCardService);
+        assertNotNull(productService);
         checkGenerator.clearFields();
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5","card-199"};
+        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-199"};
         Map<Integer, Integer> map = checkGenerator.parseArguments(args);
         Map<Product, Integer> expected = new HashMap<>();
         discountCard = discountCardService.find(199);
-        for(Map.Entry<Integer, Integer> pair : map.entrySet()) {
+        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
             expected.put(productService.find(pair.getKey()), pair.getValue());
         }
         Map<Product, Integer> result = checkGenerator.getProductsFromDb(map);
-        for(Map.Entry<Product, Integer> pair : result.entrySet()) {
+        for (Map.Entry<Product, Integer> pair : result.entrySet()) {
             Product key = pair.getKey();
             assertTrue(expected.containsKey(key));
             int value1 = pair.getValue();

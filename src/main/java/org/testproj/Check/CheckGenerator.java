@@ -178,5 +178,6 @@ public class CheckGenerator {
 
     public void clearFields() {
         discountCard = null;
+        productAndQuantity = null;
     }
 }

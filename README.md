@@ -25,6 +25,7 @@
 
 You can pass arguments in command line in the next format:
 ```prodId-qty ... card-discCardId```
+
 Example:
 ```gradle bootRun --args="12-3 5-9"``` or with discount ```gradle bootRun --args="12-3 card-123"```
 
@@ -34,10 +35,10 @@ Last created check always save to file check.txt.
 Implemented rest api with next methods:
 | Address | HTTP method |Description | Parameter |
 | --- | --- | --- | --- |
-| `/products` | `GET` | return all products |  |
-| `/product/{id}` | `GET` | return product by `id` |  |
-| `/products/{id}` | `DELETE` | delete product by `id` |  |
-| `/check?args` | `GET` |  |
+| `/products` | `GET` | return all products | `none` |
+| `/product/{id}` | `GET` | return product by `id` | `id` |
+| `/products/{id}` | `DELETE` | delete product by `id` | `id` |
+| `/check?args` | `GET` | shape check according arguments | arguments in |
 | `/product/create` | `POST` | add product |  |
 | `/discount-card/{id}` | `GET` | return discount card by id |  |
 | `/discount-cards` | `GET` | return all discount cards |  |
