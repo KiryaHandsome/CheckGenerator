@@ -1,5 +1,7 @@
 package org.testproj.Controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.testproj.Models.DiscountCard;
 import org.testproj.Services.Implementations.DiscountCardService;
@@ -31,8 +33,10 @@ public class DiscountCardController {
     }
 
     @DeleteMapping("/discount-card/delete/{id}")
-    public void deleteDiscountCard(@PathVariable String id) {
+    public ResponseEntity<String> deleteDiscountCard(@PathVariable String id) {
         discountCardService.delete(Integer.parseInt(id));
+        return ResponseEntity.status(HttpStatus.OK).body("Discount card with id " + id + "" +
+                " either was deleted or wasn't in db");
     }
 
     @PutMapping("/discount-card/update/{id}")

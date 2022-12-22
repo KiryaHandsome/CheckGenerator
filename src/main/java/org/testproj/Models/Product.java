@@ -6,7 +6,7 @@ import org.hibernate.annotations.Proxy;
 import java.util.Objects;
 
 
-@Proxy(lazy=false)   //solution for LazyInitializationException
+@Proxy(lazy = false)   //solution for LazyInitializationException
 @Entity
 @Table(name = "product")
 public class Product {
@@ -21,7 +21,8 @@ public class Product {
     @Column(name = "is_promotional")
     private boolean isPromotional;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(int id, String name, double price, boolean isPromotional) {
         this.id = id;
@@ -98,7 +99,8 @@ public class Product {
         private double price;
         private boolean isPromotional;
 
-        public ProductBuilder() { }
+        public ProductBuilder() {
+        }
 
         public ProductBuilder(Product product) {
             this.id = product.id;

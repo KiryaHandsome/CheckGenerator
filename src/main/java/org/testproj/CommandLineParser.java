@@ -15,8 +15,8 @@ public class CommandLineParser implements CommandLineRunner {
     private CheckGenerator checkGenerator;
 
     @Override
-    public void run(String... args) throws Exception {
-        if(args.length == 0) return;
+    public void run(String... args) {
+        if (args.length == 0) return;
         try {
             Map<Integer, Integer> map = checkGenerator.parseArguments(args);
             Map<Product, Integer> info = checkGenerator.getProductsFromDb(map);

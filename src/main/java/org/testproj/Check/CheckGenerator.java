@@ -129,6 +129,7 @@ public class CheckGenerator {
         checkBase.append(String.format("TOTAL COST:%" +
                 (checkWidth - 11) + ".2f\n", totalCost));  //11-len of 'total cost:' string
         check = checkBase.toString();
+        this.clearFields();
         return check;
     }
 

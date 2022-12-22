@@ -1,6 +1,8 @@
 package org.testproj.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.testproj.Models.Product;
 import org.testproj.Services.Implementations.ProductService;
@@ -28,8 +30,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/delete/{id}")
-    public void removeProductById(@PathVariable String id) {
+    public ResponseEntity<String> removeProductById(@PathVariable String id) {
         productService.delete(Integer.parseInt(id));
+        return ResponseEntity.status(HttpStatus.OK).body("Product with id " + id + "" +
+                " either was deleted or wasn't in db");
     }
 
     @PostMapping("/product/create")

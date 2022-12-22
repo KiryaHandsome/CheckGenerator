@@ -5,7 +5,7 @@ import org.hibernate.annotations.Proxy;
 
 import java.util.Objects;
 
-@Proxy(lazy=false)   //solution for LazyInitializationException
+@Proxy(lazy = false)   //solution for LazyInitializationException
 @Entity
 @Table(name = "discount_card")
 public class DiscountCard {
@@ -16,7 +16,8 @@ public class DiscountCard {
     @Column(name = "discount")
     private float discount;
 
-    public DiscountCard() { }
+    public DiscountCard() {
+    }
 
     public DiscountCard(long id, float discount) {
         this.id = id;
