@@ -1,5 +1,7 @@
 # CheckGenerator
 
+CheckGenerator present a program that can shape the cash-receipt, manipulate data through REST api and store it in database.
+
 [//]: # (## Requirements )
 
 [//]: # (* Java 17)
@@ -9,19 +11,21 @@
 [//]: # (* PostgreSQL 15)
 
 ## Used technologies
-* Java 17
-* Gradle 7.5
-* PostgreSQL 15
+* Java 17-----------|
+* Gradle 7.5--------|—— `requirements`
+* PostgreSQL 15---|
 * Spring Boot
 * Spring Data JPA2
 
 ## How to use:
 1. clone this repository
 ```git clone https://github.com/KiryaHandsome/CheckGenerator.git```
-2. go to directory with project 
-```cd CheckGenerator```
-3. run
+2. run PostgreSQL process
+3. configure `src/main/resources/application.properties` file accordingly your db information
+3. go to root directory of project 
+4. run
 ```gradle bootRun```
+5. connect to port 8080 and use api
 
 You can pass arguments in command line in the next format:
 ```prodId-qty ... card-discCardId```
@@ -29,7 +33,7 @@ You can pass arguments in command line in the next format:
 Example:
 ```gradle bootRun --args="12-3 5-9"``` or with discount ```gradle bootRun --args="12-3 card-123"```
 
-Last created check always save to file check.txt.
+Last created check is always saved to file check.txt in the root directory.
 
 ## RESTful api
 Implemented rest api with next methods:
