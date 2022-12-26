@@ -15,7 +15,7 @@ CheckGenerator present a program that can shape the cash-receipt, manipulate dat
 * Gradle 7.5--------|—— `requirements`
 * PostgreSQL 15---|
 * Spring Boot
-* Spring Data JPA2
+* Spring Data JPA
 
 ## How to use:
 1. clone this repository
