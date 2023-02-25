@@ -1,5 +1,6 @@
 package org.testproj.Services.Implementations;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.testproj.Repositories.DiscountCardRepository;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +37,7 @@ class DiscountCardServiceTest {
     void checkCreateShouldSaveCardInRepositoryWithSameArgument() {
         service.create(discountCard);
         verify(repository).save(discountCardCaptor.capture());
-        assertEquals(discountCard, discountCardCaptor.getValue());
+        assertThat(discountCardCaptor.getValue()).isEqualTo(discountCard);
     }
 
     @Test
@@ -44,7 +46,7 @@ class DiscountCardServiceTest {
         when(repository.getReferenceById(id)).thenReturn(discountCard);
         DiscountCard returnedCard = service.find(id);
         verify(repository).getReferenceById(id);
-        assertEquals(discountCard, returnedCard);
+        assertThat(returnedCard).isEqualTo(discountCard);
     }
 
     @Test
@@ -53,7 +55,7 @@ class DiscountCardServiceTest {
         int id = anyInt();
         service.find(id);
         verify(repository).getReferenceById(idCaptor.capture());
-        assertEquals(id, idCaptor.getValue());
+        assertThat(idCaptor.getValue()).isEqualTo(id);
     }
 
     @Test
@@ -68,7 +70,7 @@ class DiscountCardServiceTest {
         when(repository.findAll()).thenReturn(expectedList);
         List<DiscountCard> actualList = service.findAll();
         verify(repository).findAll();
-        assertEquals(expectedList, actualList);
+        assertThat(actualList).isEqualTo(expectedList);
     }
 
     @Test
