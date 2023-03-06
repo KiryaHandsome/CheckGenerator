@@ -1,6 +1,7 @@
 package ru.clevertec.Services.Implementations;
 
 
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.clevertec.Models.DiscountCard;
@@ -14,11 +15,13 @@ public class DiscountCardService extends AbstractShopService<DiscountCard> {
         super(discountCardRepository);
     }
 
+    @Override
     public DiscountCard update(int id, DiscountCard object) {
         object.setId(id);
         return repository.save(object);
     }
 
+    @Override
     public void delete(int id) {
         DiscountCard card = new DiscountCard();
         card.setId(id);

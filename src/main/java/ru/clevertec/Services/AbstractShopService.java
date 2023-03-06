@@ -1,6 +1,7 @@
 package ru.clevertec.Services;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.clevertec.Models.DiscountCard;
 
 import java.util.List;
 
@@ -26,4 +27,8 @@ public abstract class AbstractShopService<T> {
     public void deleteAll() {
         repository.deleteAll();
     }
+
+    public abstract T update(int id, T object);
+
+    public abstract void delete(int id);
 }
