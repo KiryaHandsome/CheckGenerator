@@ -1,13 +1,13 @@
 package org.testproj.Check;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.testproj.Check.CheckGenerator;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testproj.Exceptions.DiscountCardAlreadyPresentedException;
 import org.testproj.Models.DiscountCard;
 import org.testproj.Models.Product;
@@ -15,156 +15,154 @@ import org.testproj.Services.Implementations.DiscountCardService;
 import org.testproj.Services.Implementations.ProductService;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class CheckGeneratorTest {
-    @Autowired
-    private DiscountCardService discountCardService;
+@ExtendWith(MockitoExtension.class)
+class CheckGeneratorTest {
 
-    @Autowired
-    private ProductService productService;
+    @Mock
+    private DiscountCardService cardServiceMock;
 
-    @Autowired
+    @Mock
+    private ProductService productServiceMock;
+
+    @InjectMocks
     private CheckGenerator checkGenerator;
 
-    private DiscountCard discountCard;
+
+    @BeforeEach
+    void setup() {
+        checkGenerator = new CheckGenerator(productServiceMock, cardServiceMock);
+    }
 
     @Test
-    public void parseCmdArgumentsTest()
+    void checkParseArgumentsShouldReturnCorrectMap()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "card-12"};
-        checkGenerator.clearFields();
-        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-        Map<Integer, Integer> expected = new HashMap<>();
-        expected.put(12, 34);
-        expected.put(1, 1);
-        expected.put(2, 3);
-        expected.put(4, 5);
-        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            int key = pair.getKey();
-            assertTrue(expected.containsKey(key));
-            int value1 = pair.getValue();
-            int value2 = expected.get(key);
-            assertEquals(value1, value2);
-        }
+        String[] arguments = {"12-5", "13-4", "90-1"};
+        Map<Integer, Integer> expectedMap = new HashMap<>();
+        expectedMap.put(12, 5);
+        expectedMap.put(13, 4);
+        expectedMap.put(90, 1);
+        Map<Integer, Integer> actualMap = checkGenerator.parseArguments(arguments);
+        assertThat(actualMap).isEqualTo(expectedMap);
     }
 
     @Test
-    public void parseCmdArgumentsWithRepeatingKeysTest()
+    void checkParseArgumentsShouldReturnCorrectMapWithDiscountCard()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
-        checkGenerator.clearFields();
-        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-        discountCard = discountCardService.find(12);
-        Map<Integer, Integer> expected = new HashMap<>();
-        expected.put(12, 34);
-        expected.put(1, 1);
-        expected.put(2, 3);
-        expected.put(4, 10);
-        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            int key = pair.getKey();
-            assertTrue(expected.containsKey(key));
-            int value1 = expected.get(key);
-            int value2 = pair.getValue();
-            assertEquals(value1, value2);
-        }
+        String[] arguments = {"12-5", "13-4", "90-1", "card-123"};
+        Map<Integer, Integer> expectedMap = new HashMap<>();
+        expectedMap.put(12, 5);
+        expectedMap.put(13, 4);
+        expectedMap.put(90, 1);
+        Map<Integer, Integer> actualMap = checkGenerator.parseArguments(arguments);
+        assertThat(actualMap).isEqualTo(expectedMap);
     }
 
     @Test
-    public void parseCmdArgumentsWithFewDiscountCardsTest() throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12", "card-58"};
-        assertThrows(
-                DiscountCardAlreadyPresentedException.class, () -> {
-                    checkGenerator.parseArguments(args);
-                }
-        );
-    }
-
-    @Test
-    public void parseCmdArgumentsWithInvalidParametersTest()
+    void checkParseArgumentsShouldReturnCorrectMapWithRepeatedProduct()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-2", "4-5", "4-5", "cardjjj", "card-58"};
-        assertThrows(
-                InvalidParameterException.class, () -> {
-                    checkGenerator.parseArguments(args);
-                }
-        );
+        String[] arguments = {"11-5", "11-4", "90-1", "card-123"};
+        Map<Integer, Integer> expectedMap = new HashMap<>();
+        expectedMap.put(11, 9);
+        expectedMap.put(90, 1);
+        Map<Integer, Integer> actualMap = checkGenerator.parseArguments(arguments);
+        assertThat(actualMap).isEqualTo(expectedMap);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"12-5-3", "12", "12-", "%^&*(", "-"})
+    void checkParseArgumentsWithInvalidParamsShouldThrowInvalidParameterException(String arg) {
+        String[] arguments = {arg, "13-4", "90-1"};
+        InvalidParameterException exception = assertThrows(InvalidParameterException.class,
+                () -> checkGenerator.parseArguments(arguments));
+        assertThat(exception.getMessage()).isEqualTo("Invalid argument in command line.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"90-0", "0-90", "0-0"})
+    void checkParseArgumentsWithIncorrectQtyShouldThrowInvalidParameterException(String arg) {
+        String[] arguments = {"12-5", "13-4", arg};
+        InvalidParameterException exception = assertThrows(InvalidParameterException.class,
+                () -> checkGenerator.parseArguments(arguments));
+        assertThat(exception.getMessage()).isEqualTo("Id and quantity must be greater than 0.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"card-123", "card-11", "card-9"})
+    void checkParseArgumentsShouldThrowDiscountCardAlreadyPresentedException(String arg) {
+        String[] arguments = {"card-10", "12-5", "13-4", arg};
+        when(cardServiceMock.find(anyInt())).thenReturn(new DiscountCard(12, 13));
+        assertThrows(DiscountCardAlreadyPresentedException.class,
+                () -> checkGenerator.parseArguments(arguments));
+        verify(cardServiceMock).find(anyInt());
     }
 
     @Test
-    public void parseCmdArgumentsWithInvalidTest() {
-        String[] args = new String[]{"12-34", "1-1", "2-2", "4-5", "4-5", "cardjjj", "card-58"};
-        assertThrows(
-                InvalidParameterException.class, () -> {
-                    checkGenerator.parseArguments(args);
-                }
-        );
-    }
-
-    @Test
-    public void getProductsFromDbWithInvalidId()
+    void checkParseArgumentsShouldCallCardService()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"99999-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
-        checkGenerator.clearFields();
-        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-        assertThrows(JpaObjectRetrievalFailureException.class, () -> {
-            checkGenerator.getProductsFromDb(map);
-        });
+        when(cardServiceMock.find(anyInt())).thenReturn(new DiscountCard(12, 13));
+        checkGenerator.parseArguments("11-1", "123-5", "card-123");
+        verify(cardServiceMock).find(anyInt());
+    }
+
+
+    @Test
+    void checkGetProductsFromDb() throws DiscountCardAlreadyPresentedException {
+        Product product = new Product(12, "", 3.1, false);
+        when(productServiceMock.find(12)).thenReturn(product);
+        Map<Integer, Integer> inputMap = new HashMap<>();
+        inputMap.put(12, 12);
+        Map<Product, Integer> expectedResult = new HashMap<>();
+        expectedResult.put(product, 12);
+
+        Map<Product, Integer> actualResult = checkGenerator.getProductsFromDb(inputMap);
+
+        verify(productServiceMock).find(12);
+        assertThat(actualResult).isEqualTo(expectedResult);
     }
 
     @Test
-    public void getProductsFromDbTest()
+    void checkGenerateCheckShouldContainHeaderLabels()
             throws DiscountCardAlreadyPresentedException {
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-12"};
-        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-        assertNotNull(discountCardService);
-        assertNotNull(productService);
-        discountCard = discountCardService.find(12);
-        Map<Product, Integer> expected = new HashMap<>();
-        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            expected.put(productService.find(pair.getKey()), pair.getValue());
-        }
-        try {
-            Map<Product, Integer> result = checkGenerator.getProductsFromDb(map);
-            for (Map.Entry<Product, Integer> pair : result.entrySet()) {
-                Product key = pair.getKey();
-                assertTrue(expected.containsKey(key));
-                int value1 = pair.getValue();
-                int value2 = expected.get(key);
-                assertEquals(value1, value2);
-            }
-            assertNotNull(discountCard);
-        } catch (DiscountCardAlreadyPresentedException ex) {
-            System.out.println(ex.getMessage());
-        }
+        Map<Product, Integer> paramMap = checkGenerator.getProductsFromDb(new HashMap<>());
+
+        String result = checkGenerator.generateCheck(paramMap);
+
+        assertThat(result)
+                .contains("CASH RECEIPT")
+                .contains("Clevertec SHOP")
+                .contains("QTY")
+                .contains("DESCRIPTION")
+                .contains("PROM.")
+                .contains("PRICE")
+                .contains("TOTAL")
+                .contains("COST")
+                .contains("DISCOUNT")
+                .contains("TOTAL COST");
     }
 
     @Test
-    public void getProductsFromDbWithNotOneDiscountCardTest()
-            throws DiscountCardAlreadyPresentedException {
-        assertNotNull(discountCardService);
-        assertNotNull(productService);
-        checkGenerator.clearFields();
-        String[] args = new String[]{"12-34", "1-1", "2-3", "4-5", "4-5", "card-199"};
-        Map<Integer, Integer> map = checkGenerator.parseArguments(args);
-        Map<Product, Integer> expected = new HashMap<>();
-        discountCard = discountCardService.find(199);
-        for (Map.Entry<Integer, Integer> pair : map.entrySet()) {
-            expected.put(productService.find(pair.getKey()), pair.getValue());
-        }
-        Map<Product, Integer> result = checkGenerator.getProductsFromDb(map);
-        for (Map.Entry<Product, Integer> pair : result.entrySet()) {
-            Product key = pair.getKey();
-            assertTrue(expected.containsKey(key));
-            int value1 = pair.getValue();
-            int value2 = expected.get(key);
-            assertEquals(value1, value2);
-        }
-        assertNotNull(discountCard);
-        assertEquals(discountCard, checkGenerator.getDiscountCard());
+    void checkGenerateCheckShouldContainInfoAboutProduct() throws DiscountCardAlreadyPresentedException {
+        Map<Integer, Integer> inputMap = new HashMap<>();
+        inputMap.put(11, 11);
+        when(productServiceMock.find(11)).thenReturn(new Product(11, "ProdName", 1, true));
+        Map<Product, Integer> paramMap = checkGenerator.getProductsFromDb(inputMap);
+
+        String[] result = checkGenerator.generateCheck(paramMap).split("\n");
+
+        assertThat(Arrays.stream(result).filter(s -> s.contains("ProdName")
+                && s.contains("1")
+                && s.contains(" y ")
+                && s.contains("11"))
+                .count()).isEqualTo(1);
     }
 }
