@@ -29,7 +29,7 @@ class ProductBuilderTest {
         double price = 19123.11;
         boolean isPromotional = false;
         Product expectedProduct = new Product(id, name, price, isPromotional);
-        Product product2 = new Product().getBuilder()
+        Product actualProduct = new Product().getBuilder()
                 .setId(id)
                 .setPrice(price)
                 .setPromotional(isPromotional)
