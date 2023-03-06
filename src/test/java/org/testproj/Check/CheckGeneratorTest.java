@@ -117,16 +117,15 @@ class CheckGeneratorTest {
 
     @Test
     void checkGetProductsFromDb() throws DiscountCardAlreadyPresentedException {
-        //preparation
         Product product = new Product(12, "", 3.1, false);
         when(productServiceMock.find(12)).thenReturn(product);
         Map<Integer, Integer> inputMap = new HashMap<>();
         inputMap.put(12, 12);
         Map<Product, Integer> expectedResult = new HashMap<>();
         expectedResult.put(product, 12);
-        //action
+
         Map<Product, Integer> actualResult = checkGenerator.getProductsFromDb(inputMap);
-        //check
+
         verify(productServiceMock).find(12);
         assertThat(actualResult).isEqualTo(expectedResult);
     }
@@ -134,11 +133,10 @@ class CheckGeneratorTest {
     @Test
     void checkGenerateCheckShouldContainHeaderLabels()
             throws DiscountCardAlreadyPresentedException {
-        //preparation
         Map<Product, Integer> paramMap = checkGenerator.getProductsFromDb(new HashMap<>());
-        //action
+
         String result = checkGenerator.generateCheck(paramMap);
-        //check
+
         assertThat(result)
                 .contains("CASH RECEIPT")
                 .contains("Clevertec SHOP")
@@ -154,14 +152,13 @@ class CheckGeneratorTest {
 
     @Test
     void checkGenerateCheckShouldContainInfoAboutProduct() throws DiscountCardAlreadyPresentedException {
-        //preparation
         Map<Integer, Integer> inputMap = new HashMap<>();
         inputMap.put(11, 11);
         when(productServiceMock.find(11)).thenReturn(new Product(11, "ProdName", 1, true));
         Map<Product, Integer> paramMap = checkGenerator.getProductsFromDb(inputMap);
-        //action
+
         String[] result = checkGenerator.generateCheck(paramMap).split("\n");
-        //check
+
         assertThat(Arrays.stream(result).filter(s -> s.contains("ProdName")
                 && s.contains("1")
                 && s.contains(" y ")
