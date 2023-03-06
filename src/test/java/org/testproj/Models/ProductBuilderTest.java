@@ -12,14 +12,14 @@ class ProductBuilderTest {
         String name = "Some food";
         double price = 889.12;
         boolean isPromotional = false;
-        Product product1 = new Product(id, name, price, isPromotional);
-        Product product2 = new Product().getBuilder()
+        Product expectedProduct = new Product(id, name, price, isPromotional);
+        Product actualProduct = new Product().getBuilder()
                 .setId(id)
                 .setName(name)
                 .setPrice(price)
                 .setPromotional(isPromotional)
                 .build();
-        assertEquals(product1, product2);
+        assertEquals(expectedProduct, actualProduct);
     }
 
     @Test
@@ -28,20 +28,20 @@ class ProductBuilderTest {
         String name = null;
         double price = 19123.11;
         boolean isPromotional = false;
-        Product product1 = new Product(id, name, price, isPromotional);
+        Product expectedProduct = new Product(id, name, price, isPromotional);
         Product product2 = new Product().getBuilder()
                 .setId(id)
                 .setPrice(price)
                 .setPromotional(isPromotional)
                 .build();
-        assertEquals(product1, product2);
+        assertEquals(expectedProduct, actualProduct);
     }
 
     @Test
     public void buildObjectWithNullFieldsTest() {
-        Product product1 = new Product();
-        Product product2 = new Product().getBuilder()
+        Product expectedProduct = new Product();
+        Product actualProduct = new Product().getBuilder()
                 .build();
-        assertEquals(product1, product2);
+        assertEquals(expectedProduct, actualProduct);
     }
 }
