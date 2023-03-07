@@ -98,4 +98,22 @@ class LFUCacheTest {
         stringCacheManager.put(id, expectedValue);
         assertThat(stringCacheManager.get(id)).isEqualTo(expectedValue);
     }
+
+    @Test
+    void checkDeleteShouldNotContainsValue() {
+        for(int i = 1; i <= capacity; i++) {
+            stringCacheManager.put(i, "value" + i);
+        }
+        stringCacheManager.delete(1);
+        assertThat(stringCacheManager.contains(1)).isFalse();
+    }
+
+    @Test
+    void checkDeleteShouldDoNothing() {
+        for(int i = 1; i <= capacity; i++) {
+            stringCacheManager.put(i, "value" + i);
+        }
+        stringCacheManager.delete(Integer.MAX_VALUE);
+        assertThat(stringCacheManager.contains(1)).isTrue();
+    }
 }

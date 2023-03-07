@@ -1,6 +1,5 @@
 package ru.clevertec.cache.impl;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class LRUCacheTest {
 
     private CacheManager<Product> productCacheManager;
-    private int CAPACITY;
+    private int capacity;
 
     @BeforeEach
     void setUp() {
-        CAPACITY = 5;
-        productCacheManager = new LRUCache<>(CAPACITY);
+        capacity = 5;
+        productCacheManager = new LRUCache<>(capacity);
     }
 
     @ParameterizedTest
@@ -66,11 +65,29 @@ class LRUCacheTest {
 
     @Test
     void checkContainsShouldReturnFalseDueToCapacityOverflow() {
-        productCacheManager.put(CAPACITY, new Product());
-        for (int i = 0; i < CAPACITY; i++) {
+        productCacheManager.put(capacity, new Product());
+        for (int i = 0; i < capacity; i++) {
             productCacheManager.put(i, new Product());
         }
-        boolean actual = productCacheManager.contains(CAPACITY);
+        boolean actual = productCacheManager.contains(capacity);
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void checkDeleteShouldNotContainsValue() {
+        for(int i = 1; i <= capacity; i++) {
+            productCacheManager.put(i, new Product(i, "value" + i, 0.87, true));
+        }
+        productCacheManager.delete(1);
+        assertThat(productCacheManager.contains(1)).isFalse();
+    }
+
+    @Test
+    void checkDeleteShouldDoNothing() {
+        for(int i = 1; i <= capacity; i++) {
+            productCacheManager.put(i, new Product(i, "value" + i, 0.87, true));
+        }
+        productCacheManager.delete(Integer.MAX_VALUE);
+        assertThat(productCacheManager.contains(1)).isTrue();
     }
 }
