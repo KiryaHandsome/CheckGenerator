@@ -19,11 +19,4 @@ public class ProductService extends AbstractShopService<Product> {
         object.setId(id);
         return repository.save(object);
     }
-
-    @Override
-    public void delete(int id) {
-        repository.delete(new Product().getBuilder()
-                .setId(id)
-                .build());
-    }
 }

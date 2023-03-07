@@ -20,11 +20,4 @@ public class DiscountCardService extends AbstractShopService<DiscountCard> {
         object.setId(id);
         return repository.save(object);
     }
-
-    @Override
-    public void delete(int id) {
-        DiscountCard card = new DiscountCard();
-        card.setId(id);
-        repository.delete(card);
-    }
 }

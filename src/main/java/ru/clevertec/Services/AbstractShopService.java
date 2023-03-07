@@ -30,5 +30,7 @@ public abstract class AbstractShopService<T> {
 
     public abstract T update(int id, T object);
 
-    public abstract void delete(int id);
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
 }
