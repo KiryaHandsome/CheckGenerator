@@ -13,7 +13,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private long id;
     @Column(name = "name")
     private String name;
     @Column(name = "price")
@@ -24,18 +24,17 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, double price, boolean isPromotional) {
+    public Product(long id, String name, double price, boolean isPromotional) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.isPromotional = isPromotional;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
-
-
+    
     public long getId() {
         return id;
     }
@@ -94,7 +93,7 @@ public class Product {
     }
 
     public static class ProductBuilder {
-        private int id;
+        private long id;
         private String name;
         private double price;
         private boolean isPromotional;
@@ -109,7 +108,7 @@ public class Product {
             this.isPromotional = product.isPromotional;
         }
 
-        public ProductBuilder setId(int id) {
+        public ProductBuilder setId(long id) {
             this.id = id;
             return this;
         }
