@@ -36,4 +36,9 @@ public class LRUCache<T> implements CacheManager<T> {
     public void put(int id, T object) {
         cache.put(id, object);
     }
+
+    @Override
+    public void delete(int id) {
+        cache.remove(id);
+    }
 }
