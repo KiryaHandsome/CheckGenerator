@@ -46,8 +46,9 @@ public class LFUCache<T> implements CacheManager<T> {
         }
         int frequency = countMap.get(id);
         countMap.put(id, frequency + 1);
-        if (frequencyMap.containsKey(frequency)) {
-            frequencyMap.get(frequency).remove(id);
+        frequencyMap.get(frequency).remove(Integer.valueOf(id));
+        if (frequencyMap.get(frequency).size() == 0) {
+            frequencyMap.remove(frequency);
         }
         frequencyMap.computeIfAbsent(frequency + 1, v -> new LinkedList<>()).add(id);
         return values.get(id);
