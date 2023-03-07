@@ -86,8 +86,8 @@ class DiscountCardServiceTest {
 
     @Test
     void checkDeleteShouldCallRepositoryDelete() {
-        doNothing().when(repository).delete(any(DiscountCard.class));
+        doNothing().when(repository).deleteById(any());
         service.delete(anyInt());
-        verify(repository).delete(any(DiscountCard.class));
+        verify(repository).deleteById(any());
     }
 }

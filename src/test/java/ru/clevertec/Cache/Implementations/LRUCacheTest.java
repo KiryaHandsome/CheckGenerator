@@ -1,11 +1,11 @@
-package ru.clevertec.cache.impl;
+package ru.clevertec.Cache.Implementations;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.clevertec.Models.Product;
-import ru.clevertec.cache.CacheManager;
+import ru.clevertec.Cache.CacheManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

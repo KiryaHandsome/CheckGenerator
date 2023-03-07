@@ -76,8 +76,8 @@ class ProductServiceTest {
 
     @Test
     void checkDeleteShouldCallRepositoryDelete() {
-        doNothing().when(repository).delete(any(Product.class));
+        doNothing().when(repository).deleteById(any());
         service.delete(anyInt());
-        verify(repository).delete(any(Product.class));
+        verify(repository).deleteById(any());
     }
 }
