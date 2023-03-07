@@ -98,7 +98,7 @@ public class LFUCache<T> implements CacheManager<T> {
                 frequencyMap.remove(frequency);
             }
 
-            frequencyMap.computeIfAbsent(frequency, v -> new LinkedList<>()).add(id);
+            frequencyMap.computeIfAbsent(frequency + 1, v -> new LinkedList<>()).add(id);
         }
     }
 }
