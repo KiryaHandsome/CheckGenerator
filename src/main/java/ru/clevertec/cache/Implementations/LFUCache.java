@@ -1,25 +1,28 @@
-package ru.clevertec.cache.impl;
+package ru.clevertec.Cache.Implementations;
 
-import ru.clevertec.cache.CacheManager;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import ru.clevertec.Cache.CacheManager;
 
 import java.util.*;
 
+@Component
 public class LFUCache<T> implements CacheManager<T> {
     /**
      * Map that contains id as key
      * and object as value
      */
-    private Map<Integer, T> values = new HashMap<>();
+    private Map<Long, T> values = new HashMap<>();
     /**
      * Map that contains id as key
      * and count of usages as value
      */
-    private Map<Integer, Integer> countMap = new HashMap<>();
+    private Map<Long, Integer> countMap = new HashMap<>();
     /**
      * Sorted map that contains frequency of using as key
      * and list of objects id as value
      */
-    private TreeMap<Integer, List<Integer>> frequencyMap = new TreeMap<>();
+    private TreeMap<Integer, List<Long>> frequencyMap = new TreeMap<>();
 
     private final int CAPACITY;
 
@@ -27,7 +30,7 @@ public class LFUCache<T> implements CacheManager<T> {
      * @param capacity max size of cache
      * @throws IllegalArgumentException when passed capacity less than 1
      */
-    public LFUCache(int capacity) {
+    public LFUCache(@Value("5") int capacity) {
         if(capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
@@ -40,27 +43,18 @@ public class LFUCache<T> implements CacheManager<T> {
      * @return instance if object in cache, null otherwise
      */
     @Override
-    public T get(int id) {
+    public T get(long id) {
         if (!values.containsKey(id)) {
             return null;
         }
         int frequency = countMap.get(id);
         countMap.put(id, frequency + 1);
-        frequencyMap.get(frequency).remove(Integer.valueOf(id));
+        frequencyMap.get(frequency).remove(id);
         if (frequencyMap.get(frequency).size() == 0) {
             frequencyMap.remove(frequency);
         }
         frequencyMap.computeIfAbsent(frequency + 1, v -> new LinkedList<>()).add(id);
         return values.get(id);
-    }
-
-    /**
-     * @param id id of desired object
-     * @return true if object in cache, false otherwise
-     */
-    @Override
-    public boolean contains(int id) {
-        return values.containsKey(id);
     }
 
     /**
@@ -71,11 +65,11 @@ public class LFUCache<T> implements CacheManager<T> {
      * @param object object to store
      * */
     @Override
-    public void put(int id, T object) {
+    public void put(long id, T object) {
         if(!values.containsKey(id)) {
             if(values.size() == CAPACITY) {
                 int leastFrequency =  frequencyMap.firstKey();
-                int idToRemove = frequencyMap.get(leastFrequency).remove(0);
+                long idToRemove = frequencyMap.get(leastFrequency).remove(0);
 
                 if(frequencyMap.get(leastFrequency).size() == 0) {
                     frequencyMap.remove(leastFrequency);
@@ -93,7 +87,7 @@ public class LFUCache<T> implements CacheManager<T> {
             int frequency = countMap.get(id);
             countMap.put(id, frequency + 1);
 
-            frequencyMap.get(frequency).remove(Integer.valueOf(id));
+            frequencyMap.get(frequency).remove(Long.valueOf(id));
             if(frequencyMap.get(frequency).size() == 0) {
                 frequencyMap.remove(frequency);
             }
@@ -102,13 +96,18 @@ public class LFUCache<T> implements CacheManager<T> {
         }
     }
 
+    /**
+     * Remove object from cache by id
+     * @param id id object that will be deleted
+     * Do nothing if there is no object with such id
+     * */
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         if(values.containsKey(id)) {
             int frequency = countMap.get(id);
             countMap.remove(id);
             values.remove(id);
-            frequencyMap.get(frequency).remove(Integer.valueOf(frequency));
+            frequencyMap.get(frequency).remove(id);
         }
     }
 }

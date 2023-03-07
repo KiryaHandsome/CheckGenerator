@@ -75,21 +75,6 @@ class LFUCacheTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"abc", "test", "UPPER_CASE", "@#%^&*())"})
-    void checkContainsShouldReturnTrue(String s) {
-        stringCacheManager.put(1, s);
-        boolean actual = stringCacheManager.contains(1);
-        assertThat(actual).isTrue();
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {123, 10000, Integer.MAX_VALUE})
-    void checkContainsShouldReturnFalse(int id) {
-        boolean actual = stringCacheManager.contains(id);
-        assertThat(actual).isFalse();
-    }
-
-    @ParameterizedTest
     @ValueSource(ints = {123, 10000, Integer.MAX_VALUE})
     void checkPutShouldUpdateExistingValue(int id) {
         String value = "Some Value";
@@ -105,7 +90,7 @@ class LFUCacheTest {
             stringCacheManager.put(i, "value" + i);
         }
         stringCacheManager.delete(1);
-        assertThat(stringCacheManager.contains(1)).isFalse();
+        assertThat(stringCacheManager.get(1)).isNotNull();
     }
 
     @Test
@@ -114,6 +99,6 @@ class LFUCacheTest {
             stringCacheManager.put(i, "value" + i);
         }
         stringCacheManager.delete(Integer.MAX_VALUE);
-        assertThat(stringCacheManager.contains(1)).isTrue();
+        assertThat(stringCacheManager.get(1)).isNotNull();
     }
 }

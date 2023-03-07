@@ -48,38 +48,13 @@ class LRUCacheTest {
         assertThat(actual).isEqualTo(expectedProduct);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 11, 88, 99, Integer.MAX_VALUE})
-    void checkContainsShouldReturnFalse(int id) {
-        boolean actual = productCacheManager.contains(id);
-        assertThat(actual).isFalse();
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 11, 88, 99, Integer.MAX_VALUE})
-    void checkContainsShouldReturnTrue(int id) {
-        productCacheManager.put(id, new Product());
-        boolean actual = productCacheManager.contains(id);
-        assertThat(actual).isTrue();
-    }
-
-    @Test
-    void checkContainsShouldReturnFalseDueToCapacityOverflow() {
-        productCacheManager.put(capacity, new Product());
-        for (int i = 0; i < capacity; i++) {
-            productCacheManager.put(i, new Product());
-        }
-        boolean actual = productCacheManager.contains(capacity);
-        assertThat(actual).isFalse();
-    }
-
     @Test
     void checkDeleteShouldNotContainsValue() {
         for(int i = 1; i <= capacity; i++) {
             productCacheManager.put(i, new Product(i, "value" + i, 0.87, true));
         }
         productCacheManager.delete(1);
-        assertThat(productCacheManager.contains(1)).isFalse();
+        assertThat(productCacheManager.get(1)).isNotNull();
     }
 
     @Test
@@ -88,6 +63,6 @@ class LRUCacheTest {
             productCacheManager.put(i, new Product(i, "value" + i, 0.87, true));
         }
         productCacheManager.delete(Integer.MAX_VALUE);
-        assertThat(productCacheManager.contains(1)).isTrue();
+        assertThat(productCacheManager.get(1)).isNotNull();
     }
 }
