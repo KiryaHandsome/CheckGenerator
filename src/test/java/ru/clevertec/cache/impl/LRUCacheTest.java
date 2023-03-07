@@ -1,5 +1,6 @@
 package ru.clevertec.cache.impl;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,7 @@ import ru.clevertec.Models.Product;
 import ru.clevertec.cache.CacheManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LRUCacheTest {
 
@@ -18,6 +20,13 @@ class LRUCacheTest {
     void setUp() {
         CAPACITY = 5;
         productCacheManager = new LRUCache<>(CAPACITY);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {Integer.MIN_VALUE, -123, -100, -1, 0})
+    void checkConstructorShouldThrowIllegalArgumentException(int capacity) {
+        assertThrows(IllegalArgumentException.class,
+                () -> new LRUCache<>(capacity));
     }
 
     @ParameterizedTest
