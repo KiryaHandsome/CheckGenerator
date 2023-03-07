@@ -10,6 +10,9 @@ public class LRUCache<T> implements CacheManager<T> {
     private final int CAPACITY;
 
     public LRUCache(int capacity) {
+        if(capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be natural");
+        }
         this.CAPACITY = capacity;
         cache = new LinkedHashMap<>(CAPACITY, 0.75f, true) {
             @Override
@@ -32,10 +35,5 @@ public class LRUCache<T> implements CacheManager<T> {
     @Override
     public void put(int id, T object) {
         cache.put(id, object);
-    }
-
-    @Override
-    public void delete(int id) {
-        cache.remove(id);
     }
 }
