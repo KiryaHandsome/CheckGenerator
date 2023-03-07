@@ -41,7 +41,7 @@ public class LFUCache<T> implements CacheManager<T> {
      */
     @Override
     public T get(int id) {
-        if (!values.containsKey(id) || CAPACITY <= 0) {
+        if (!values.containsKey(id)) {
             return null;
         }
         int frequency = countMap.get(id);
@@ -71,7 +71,7 @@ public class LFUCache<T> implements CacheManager<T> {
      * */
     @Override
     public void put(int id, T object) {
-        if(!values.containsKey(id) && CAPACITY > 0) {
+        if(!values.containsKey(id)) {
             if(values.size() == CAPACITY) {
                 int leastFrequency =  frequencyMap.firstKey();
                 int idToRemove = frequencyMap.get(leastFrequency).remove(0);
@@ -86,7 +86,7 @@ public class LFUCache<T> implements CacheManager<T> {
             values.put(id, object);
             countMap.put(id, 1);
             frequencyMap.computeIfAbsent(1, v -> new LinkedList<>()).add(id);
-        } else if(CAPACITY > 0) {
+        } else {
             values.put(id, object);
 
             int frequency = countMap.get(id);
