@@ -90,7 +90,7 @@ class LFUCacheTest {
             stringCacheManager.put(i, "value" + i);
         }
         stringCacheManager.delete(1);
-        assertThat(stringCacheManager.get(1)).isNotNull();
+        assertThat(stringCacheManager.get(1)).isNull();
     }
 
     @Test

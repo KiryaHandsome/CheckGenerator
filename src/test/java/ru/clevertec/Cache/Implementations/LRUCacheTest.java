@@ -54,7 +54,7 @@ class LRUCacheTest {
             productCacheManager.put(i, new Product(i, "value" + i, 0.87, true));
         }
         productCacheManager.delete(1);
-        assertThat(productCacheManager.get(1)).isNotNull();
+        assertThat(productCacheManager.get(1)).isNull();
     }
 
     @Test
