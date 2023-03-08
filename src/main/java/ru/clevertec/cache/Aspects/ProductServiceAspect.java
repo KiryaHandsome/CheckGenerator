@@ -5,18 +5,14 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.clevertec.Cache.CacheManager;
-import ru.clevertec.Cache.Implementations.LFUCache;
 import ru.clevertec.Models.Product;
 
 @Component
 @Aspect
 public class ProductServiceAspect {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private CacheManager<Product> cache;
 
     @Autowired
@@ -24,8 +20,8 @@ public class ProductServiceAspect {
         this.cache = cacheImplementation;
     }
 
-    @Around("execution(* ru.clevertec.Services.AbstractShopService.create())")
-    public Object create(ProceedingJoinPoint proceedingJoinPoint) {
+    @Around("execution(* ru.clevertec.Services.AbstractShopService.create(..))")
+    public Product create(ProceedingJoinPoint proceedingJoinPoint) {
         Product value = null;
         try {
             value = (Product) proceedingJoinPoint.proceed();
@@ -51,7 +47,7 @@ public class ProductServiceAspect {
         return product;
     }
 
-    @Before("execution(* ru.clevertec.Services.AbstractShopService.update())")
+    @Before("execution(* ru.clevertec.Services.Implementations.ProductService.update(..))")
     public void update(JoinPoint joinPoint) {
         long id = (long) joinPoint.getArgs()[0];
         Product product = (Product) joinPoint.getArgs()[1];
@@ -59,7 +55,7 @@ public class ProductServiceAspect {
         cache.put(id, product);
     }
 
-    @Before("execution(* ru.clevertec.Services.AbstractShopService.find())")
+    @Before("execution(* ru.clevertec.Services.AbstractShopService.delete(..))")
     public void delete(JoinPoint joinPoint) {
         int id = (int) joinPoint.getArgs()[0];
         cache.delete(id);

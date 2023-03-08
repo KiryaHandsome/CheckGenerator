@@ -16,7 +16,6 @@ public class BootTest {
 
     @Test
     public void testLoggable() {
-
-        service.find(12);
+        System.out.println(service.find(12));
     }
 }

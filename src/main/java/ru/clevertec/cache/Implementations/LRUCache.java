@@ -1,10 +1,13 @@
 package ru.clevertec.Cache.Implementations;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.clevertec.Cache.CacheManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Component
 public class LRUCache<T> implements CacheManager<T> {
     /**
      * Storage for cache.
@@ -21,7 +24,7 @@ public class LRUCache<T> implements CacheManager<T> {
      * that it will remove the least recently used object
      * when size becomes more than capacity
      */
-    public LRUCache(int capacity) {
+    public LRUCache(@Value("${cache.capacity}") int capacity) {
         if(capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
