@@ -27,7 +27,7 @@ public class LFUCache<T> implements Cache<T> {
 
     /**
      * @param capacity max size of cache
-     * @throws IllegalArgumentException when passed capacity less than 1
+     * @throws IllegalArgumentException if passed capacity less than 1
      */
     public LFUCache(int capacity) {
         System.out.println(capacity);
