@@ -6,18 +6,21 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.clevertec.Cache.CacheManager;
+import ru.clevertec.Cache.Cache;
+import ru.clevertec.Cache.CacheFactory;
+import ru.clevertec.Cache.CacheType;
 import ru.clevertec.Models.Product;
 
 @Component
 @Aspect
 public class ProductServiceAspect {
-    private CacheManager<Product> cache;
+    private Cache<Product> cache;
 
-    @Autowired
-    public ProductServiceAspect(CacheManager<Product> cacheImplementation) {
-        this.cache = cacheImplementation;
+    public ProductServiceAspect(@Value("${cache.algorithm}") CacheType type,
+                                @Value("${cache.capacity}") int capacity) {
+        this.cache = CacheFactory.getCache(type, capacity);
     }
 
     @Around("execution(* ru.clevertec.Services.AbstractShopService.create(..))")
@@ -57,7 +60,7 @@ public class ProductServiceAspect {
 
     @Before("execution(* ru.clevertec.Services.AbstractShopService.delete(..))")
     public void delete(JoinPoint joinPoint) {
-        int id = (int) joinPoint.getArgs()[0];
+        long id = (long) joinPoint.getArgs()[0];
         cache.delete(id);
     }
 }

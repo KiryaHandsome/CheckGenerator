@@ -6,7 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import ru.clevertec.Cache.CacheManager;
+import ru.clevertec.Cache.Cache;
 
 import java.util.stream.Stream;
 
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class LFUCacheTest {
-    private CacheManager<String> stringCacheManager;
+    private Cache<String> stringCacheManager;
     private int capacity;
 
     @BeforeEach

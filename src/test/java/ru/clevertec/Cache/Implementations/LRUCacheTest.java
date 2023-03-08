@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import ru.clevertec.Models.Product;
-import ru.clevertec.Cache.CacheManager;
+import ru.clevertec.Cache.Cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LRUCacheTest {
 
-    private CacheManager<Product> productCacheManager;
+    private Cache<Product> productCacheManager;
     private int capacity;
 
     @BeforeEach

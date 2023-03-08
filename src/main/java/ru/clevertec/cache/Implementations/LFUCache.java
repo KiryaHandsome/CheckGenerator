@@ -1,12 +1,12 @@
 package ru.clevertec.Cache.Implementations;
 
 import org.springframework.beans.factory.annotation.Value;
-import ru.clevertec.Cache.CacheManager;
+import ru.clevertec.Cache.Cache;
 
 import java.util.*;
 
 
-public class LFUCache<T> implements CacheManager<T> {
+public class LFUCache<T> implements Cache<T> {
     /**
      * Map that contains id as key
      * and object as value
@@ -29,7 +29,8 @@ public class LFUCache<T> implements CacheManager<T> {
      * @param capacity max size of cache
      * @throws IllegalArgumentException when passed capacity less than 1
      */
-    public LFUCache(@Value("${cache.capacity}") int capacity) {
+    public LFUCache(int capacity) {
+        System.out.println(capacity);
         if(capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
