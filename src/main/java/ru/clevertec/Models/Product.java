@@ -1,6 +1,8 @@
 package ru.clevertec.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.annotations.Proxy;
 
 import java.util.Objects;
@@ -15,6 +17,8 @@ public class Product {
     @Column(name = "id")
     private long id;
     @Column(name = "name")
+    @NotBlank
+    @Pattern(regexp = "[\\w\\d -]+", message = "Name cannot contain any special characters")
     private String name;
     @Column(name = "price")
     private double price;
