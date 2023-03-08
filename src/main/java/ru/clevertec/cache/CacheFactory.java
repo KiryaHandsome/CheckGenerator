@@ -1,7 +1,7 @@
 package ru.clevertec.Cache;
 
-import ru.clevertec.Cache.Implementations.LFUCache;
-import ru.clevertec.Cache.Implementations.LRUCache;
+import ru.clevertec.Cache.Implementation.LFUCache;
+import ru.clevertec.Cache.Implementation.LRUCache;
 
 /**
  * Factory pattern implementation for Cache

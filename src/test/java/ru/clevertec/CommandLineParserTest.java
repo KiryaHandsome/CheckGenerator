@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.Check.CheckGenerator;
-import ru.clevertec.Exceptions.DiscountCardAlreadyPresentedException;
+import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
 
 import java.io.IOException;
 

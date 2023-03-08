@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.clevertec.Check.CheckGenerator;
-import ru.clevertec.Models.Product;
+import ru.clevertec.Model.Product;
 
 import java.util.Map;
 

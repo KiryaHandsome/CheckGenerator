@@ -3,11 +3,11 @@ package ru.clevertec.Check;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.clevertec.Exceptions.DiscountCardAlreadyPresentedException;
-import ru.clevertec.Models.DiscountCard;
-import ru.clevertec.Models.Product;
-import ru.clevertec.Services.Implementations.DiscountCardService;
-import ru.clevertec.Services.Implementations.ProductService;
+import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
+import ru.clevertec.Model.DiscountCard;
+import ru.clevertec.Model.Product;
+import ru.clevertec.Service.Implementation.DiscountCardService;
+import ru.clevertec.Service.Implementation.ProductService;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
