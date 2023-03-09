@@ -23,6 +23,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+
     runtimeOnly 'org.postgresql:postgresql'
 }
 

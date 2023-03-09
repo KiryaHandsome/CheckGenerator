@@ -1,5 +1,6 @@
-package ru.clevertec.Cache;
+package ru.clevertec.Cache.Factory;
 
+import ru.clevertec.Cache.Cache;
 import ru.clevertec.Cache.Implementation.LFUCache;
 import ru.clevertec.Cache.Implementation.LRUCache;
 

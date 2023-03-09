@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.clevertec.Check.CheckGenerator;
 import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
 import ru.clevertec.Model.Product;
-import ru.clevertec.Service.Implementation.ProductService;
 
 import java.io.IOException;
 import java.util.Map;
@@ -17,11 +16,9 @@ import java.util.Map;
 @RequestMapping("/check")
 public class CheckController {
     final private CheckGenerator checkGenerator;
-    final private ProductService productService;
 
     @Autowired
-    public CheckController(ProductService productService, CheckGenerator checkGenerator) {
-        this.productService = productService;
+    public CheckController(CheckGenerator checkGenerator) {
         this.checkGenerator = checkGenerator;
     }
 

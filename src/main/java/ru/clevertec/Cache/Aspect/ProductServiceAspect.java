@@ -8,8 +8,8 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.clevertec.Cache.Cache;
-import ru.clevertec.Cache.CacheFactory;
-import ru.clevertec.Cache.CacheType;
+import ru.clevertec.Cache.Factory.CacheFactory;
+import ru.clevertec.Cache.Factory.CacheType;
 import ru.clevertec.Model.Product;
 
 @Component
@@ -29,12 +29,12 @@ public class ProductServiceAspect {
     }
 
     /**
-     * Advice around AbstractShopService.create(). <br/>
+     * Advice around ProductService.create(). <br/>
      * Put value to cache after AbstractShopService
      * creates new object in db.
      * @return value returned by ProductService
      */
-    @Around("execution(* ru.clevertec.Service.AbstractShopService.create(..))")
+    @Around("execution(* ru.clevertec.Service.Implementation.ProductService.create(..))")
     public Product create(ProceedingJoinPoint proceedingJoinPoint) {
         Product value = null;
         try {
@@ -47,12 +47,12 @@ public class ProductServiceAspect {
     }
 
     /**
-     * Advice around AbstractShopService.find(). <br/>
+     * Advice around ProductService.find(). <br/>
      * Check if cache contains object with passed id
      * then return value from cache, otherwise call AbstractShopService.find()
      * @return value from cache or from db
      */
-    @Around("execution(* ru.clevertec.Service.AbstractShopService.find(..))")
+    @Around("execution(* ru.clevertec.Service.Implementation.ProductService.find(..))")
     public Product find(ProceedingJoinPoint proceedingJoinPoint) {
         int id = (int) proceedingJoinPoint.getArgs()[0];
         Product product = cache.get(id);
@@ -83,7 +83,7 @@ public class ProductServiceAspect {
      * Advice before ProductService.delete(). <br/>
      * Removes value from cache.
      */
-    @Before("execution(* ru.clevertec.Service.AbstractShopService.delete(..))")
+    @Before("execution(* ru.clevertec.Service.Implementation.ProductService.delete(..))")
     public void delete(JoinPoint joinPoint) {
         long id = (long) joinPoint.getArgs()[0];
         cache.delete(id);

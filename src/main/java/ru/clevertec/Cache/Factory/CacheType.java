@@ -1,4 +1,4 @@
-package ru.clevertec.Cache;
+package ru.clevertec.Cache.Factory;
 
 /**
  * Types of cache implementations
