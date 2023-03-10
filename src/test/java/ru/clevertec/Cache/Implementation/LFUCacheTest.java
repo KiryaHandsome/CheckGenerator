@@ -15,20 +15,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class LFUCacheTest {
-    private Cache<String> stringCacheManager;
+    private Cache stringCacheManager;
     private int capacity;
 
     @BeforeEach
     void setUp() {
         capacity = 5;
-        stringCacheManager = new LFUCache<>(capacity);
+        stringCacheManager = new LFUCache(capacity);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, -123, -100, -1, 0})
     void checkConstructorShouldThrowIllegalArgumentException(int capacity) {
         assertThrows(IllegalArgumentException.class,
-                () -> new LFUCache<>(capacity));
+                () -> new LFUCache(capacity));
     }
 
     @ParameterizedTest

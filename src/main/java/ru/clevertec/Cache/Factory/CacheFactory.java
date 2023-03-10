@@ -12,10 +12,10 @@ public class CacheFactory {
      * @param type cache implementation
      * @param capacity max size of cache
      */
-    public static <T> Cache<T> getCache(CacheType type, int capacity) {
+    public static Cache getCache(CacheType type, int capacity) {
         return switch (type) {
-            case LRU -> new LRUCache<>(capacity);
-            case LFU -> new LFUCache<>(capacity);
+            case LRU -> new LRUCache(capacity);
+            case LFU -> new LFUCache(capacity);
         };
     }
 }

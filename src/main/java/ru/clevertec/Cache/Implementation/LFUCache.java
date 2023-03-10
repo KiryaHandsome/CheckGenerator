@@ -5,24 +5,24 @@ import ru.clevertec.Cache.Cache;
 import java.util.*;
 
 
-public class LFUCache<T> implements Cache<T> {
+public class LFUCache implements Cache {
     /**
      * Map that contains id as key
      * and object as value
      */
-    private Map<Long, T> values = new HashMap<>();
+    private Map<Integer, Object> values = new HashMap<>();
     /**
      * Map that contains id as key
      * and count of usages as value
      */
-    private Map<Long, Integer> countMap = new HashMap<>();
+    private Map<Integer, Integer> countMap = new HashMap<>();
     /**
      * Sorted map that contains frequency of using as key
      * and list of objects id as value
      */
-    private TreeMap<Integer, List<Long>> frequencyMap = new TreeMap<>();
+    private TreeMap<Integer, List<Integer>> frequencyMap = new TreeMap<>();
 
-    private final int CAPACITY;
+    private final int capacity;
 
     /**
      * @param capacity max size of cache
@@ -33,7 +33,7 @@ public class LFUCache<T> implements Cache<T> {
         if(capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
-        this.CAPACITY = capacity;
+        this.capacity = capacity;
     }
 
     /**
@@ -42,13 +42,13 @@ public class LFUCache<T> implements Cache<T> {
      * @return instance if object in cache, null otherwise
      */
     @Override
-    public T get(long id) {
+    public Object get(int id) {
         if (!values.containsKey(id)) {
             return null;
         }
         int frequency = countMap.get(id);
         countMap.put(id, frequency + 1);
-        frequencyMap.get(frequency).remove(id);
+        frequencyMap.get(frequency).remove(Integer.valueOf(id));
         if (frequencyMap.get(frequency).size() == 0) {
             frequencyMap.remove(frequency);
         }
@@ -64,11 +64,11 @@ public class LFUCache<T> implements Cache<T> {
      * @param object object to store
      * */
     @Override
-    public void put(long id, T object) {
+    public void put(int id, Object object) {
         if(!values.containsKey(id)) {
-            if(values.size() == CAPACITY) {
+            if(values.size() == capacity) {
                 int leastFrequency =  frequencyMap.firstKey();
-                long idToRemove = frequencyMap.get(leastFrequency).remove(0);
+                int idToRemove = frequencyMap.get(leastFrequency).remove(0);
 
                 if(frequencyMap.get(leastFrequency).size() == 0) {
                     frequencyMap.remove(leastFrequency);
@@ -86,7 +86,7 @@ public class LFUCache<T> implements Cache<T> {
             int frequency = countMap.get(id);
             countMap.put(id, frequency + 1);
 
-            frequencyMap.get(frequency).remove(Long.valueOf(id));
+            frequencyMap.get(frequency).remove(Integer.valueOf(id));
             if(frequencyMap.get(frequency).size() == 0) {
                 frequencyMap.remove(frequency);
             }
@@ -101,7 +101,7 @@ public class LFUCache<T> implements Cache<T> {
      * Do nothing if there is no object with such id
      * */
     @Override
-    public void delete(long id) {
+    public void delete(int id) {
         if(values.containsKey(id)) {
             int frequency = countMap.get(id);
             countMap.remove(id);

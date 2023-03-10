@@ -12,20 +12,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LRUCacheTest {
 
-    private Cache<Product> productCacheManager;
+    private Cache productCacheManager;
     private int capacity;
 
     @BeforeEach
     void setUp() {
         capacity = 5;
-        productCacheManager = new LRUCache<>(capacity);
+        productCacheManager = new LRUCache(capacity);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, -123, -100, -1, 0})
     void checkConstructorShouldThrowIllegalArgumentException(int capacity) {
         assertThrows(IllegalArgumentException.class,
-                () -> new LRUCache<>(capacity));
+                () -> new LRUCache(capacity));
     }
 
     @ParameterizedTest
@@ -44,7 +44,7 @@ class LRUCacheTest {
                 .setName("Name")
                 .build();
         productCacheManager.put(id, expectedProduct);
-        Product actual = productCacheManager.get(id);
+        Product actual = (Product) productCacheManager.get(id);
         assertThat(actual).isEqualTo(expectedProduct);
     }
 

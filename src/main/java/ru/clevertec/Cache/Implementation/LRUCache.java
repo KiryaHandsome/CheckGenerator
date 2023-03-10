@@ -5,13 +5,13 @@ import ru.clevertec.Cache.Cache;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LRUCache<T> implements Cache<T> {
+public class LRUCache implements Cache {
     /**
      * Storage for cache.
      * LinkedHashMap implements access order
      * that's why is the best approach to use it in LRU cache
      * */
-    private LinkedHashMap<Long, T> cache;
+    private LinkedHashMap<Integer, Object> cache;
     private final int CAPACITY;
 
     /**
@@ -40,7 +40,7 @@ public class LRUCache<T> implements Cache<T> {
      * @return instance if object in cache, null otherwise
      */
     @Override
-    public T get(long id) {
+    public Object get(int id) {
         return cache.getOrDefault(id, null);
     }
 
@@ -52,7 +52,7 @@ public class LRUCache<T> implements Cache<T> {
      * @param object object to store
      * */
     @Override
-    public void put(long id, T object) {
+    public void put(int id, Object object) {
         cache.put(id, object);
     }
 
@@ -62,7 +62,7 @@ public class LRUCache<T> implements Cache<T> {
      * Do nothing if there is no object with such id
      * */
     @Override
-    public void delete(long id) {
+    public void delete(int id) {
         cache.remove(id);
     }
 }

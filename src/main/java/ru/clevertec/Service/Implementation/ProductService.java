@@ -3,6 +3,9 @@ package ru.clevertec.Service.Implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import ru.clevertec.Cache.Annotations.CacheEvict;
+import ru.clevertec.Cache.Annotations.CachePut;
+import ru.clevertec.Cache.Annotations.Cacheable;
 import ru.clevertec.Model.Product;
 import ru.clevertec.Repository.ProductRepository;
 import ru.clevertec.Service.ShopService;
@@ -24,6 +27,7 @@ public class ProductService implements ShopService<Product> {
     }
 
     @Override
+    @Cacheable
     public Product find(int id) {
         return repository.getReferenceById(id);
     }
@@ -39,12 +43,14 @@ public class ProductService implements ShopService<Product> {
     }
 
     @Override
+    @CachePut
     public Product update(int id, Product object) {
         object.setId(id);
         return repository.save(object);
     }
 
     @Override
+    @CacheEvict
     public void delete(int id) {
         repository.deleteById(id);
     }
