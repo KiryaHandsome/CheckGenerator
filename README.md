@@ -48,3 +48,10 @@ Implemented rest api with next methods:
 | `/discount-cards` | `GET` | return all discount cards | `none` |
 | `/discount-card/{id}` | `DELETE` | delete discount card by id | `id` |
 | `/discount-card/create` | `POST` | add discount card | request body with field `discount` |
+
+Also you may get prodcut information in xml format. To do it just add `/xml`
+to begin of url path like this `localhost:8080/xml/products`
+
+## Cache
+Two cache algorithms were implemented: `LRU` (The Least Recently Used) and `LFU` (The Least Frequency Used).
+You can use annotations `@Cacheable`, `@CachePut` and `@CacheEvict` for your service 

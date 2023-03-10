@@ -8,11 +8,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.clevertec.Exceptions.DiscountCardAlreadyPresentedException;
-import ru.clevertec.Models.DiscountCard;
-import ru.clevertec.Models.Product;
-import ru.clevertec.Services.Implementations.DiscountCardService;
-import ru.clevertec.Services.Implementations.ProductService;
+import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
+import ru.clevertec.Model.DiscountCard;
+import ru.clevertec.Model.Product;
+import ru.clevertec.Service.Implementation.DiscountCardService;
+import ru.clevertec.Service.Implementation.ProductService;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
