@@ -91,6 +91,6 @@ public class ServiceProxy {
     }
 
     private String buildName(JoinPoint jp) {
-        return jp.getClass().getName() + jp.getSignature().getName();
+        return jp.getClass().getName();
     }
 }
