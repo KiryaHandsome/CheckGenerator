@@ -47,11 +47,11 @@ public class CheckGenerator {
         addDataFromDb(info, check);
         return check;
     }
-//
-//    TODO: write check to file
-//    public void saveCheckToFile(String fileName) throws IOException {
-//        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-//        //writer.write(check);
-//        writer.close();
-//    }
+
+    public void saveCheckToFile(String fileName, String checkContent) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+        writer.write(checkContent);
+        writer.close();
+    }
+
 }

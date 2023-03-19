@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CheckStringBuilder implements CheckBuilder {
     private final CheckSettings settings;
-    private double totalCost = 0;
+    private double totalCost;
     private StringBuilder checkBuilder;
     private String productTemplate;
 
