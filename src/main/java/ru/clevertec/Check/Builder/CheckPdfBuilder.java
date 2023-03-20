@@ -4,6 +4,7 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -15,6 +16,7 @@ import ru.clevertec.Model.DiscountCard;
 import ru.clevertec.Model.Product;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +43,6 @@ public class CheckPdfBuilder implements CheckBuilder {
 
         document.add(new Paragraph("\n".repeat(PADDING)));
 
-
         List<Cell> headerCells = getHeaderCells();
         Table productsTable = getProductsTable(products);
 
@@ -56,13 +57,14 @@ public class CheckPdfBuilder implements CheckBuilder {
         return null;
     }
 
+    /**
+     * Shape table with information from map.
+     * @return table with products info for check
+     */
     private Table getProductsTable(Map<Product, Integer> products) {
         Table table2 = new Table(5);
-        table2.addHeaderCell("QTY")
-                .addHeaderCell("DESCRIPTION")
-                .addHeaderCell("PROM.")
-                .addHeaderCell("PRICE")
-                .addHeaderCell("TOTAL");
+        List<Cell> namingCells = createNamingCells();
+        namingCells.forEach(table2::addHeaderCell);
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product pr = entry.getKey();
             int qty = entry.getValue();
@@ -87,17 +89,35 @@ public class CheckPdfBuilder implements CheckBuilder {
         return table2;
     }
 
+    /**
+     * @return list with cells filled with names from {@link ru.clevertec.Check.CheckUtil}
+     * like qty, description, total and others
+     */
+    private List<Cell> createNamingCells() {
+        List<Cell> cellList = new ArrayList<>();
+        for(String fieldName : CheckUtil.PRODUCT_FIELDS) {
+            Cell currentCell = new Cell().setTextAlignment(TextAlignment.CENTER);
+            currentCell.add(new Paragraph(fieldName));
+            cellList.add(currentCell);
+        }
+        return cellList;
+    }
+
+    /**
+     * Creates cells for header with corresponding properties.
+     * @return list of cells for header
+     */
     private List<Cell> getHeaderCells() {
-        Cell cashReceiptCell = new Cell().setTextAlignment(TextAlignment.CENTER);
+        Cell cashReceiptCell = new Cell().setTextAlignment(TextAlignment.CENTER).setBorderBottom(Border.NO_BORDER);
         cashReceiptCell.add(new Paragraph(CheckUtil.CASH_RECEIPT));
 
-        Cell shopNameCell = new Cell().setTextAlignment(TextAlignment.CENTER);
+        Cell shopNameCell = new Cell().setTextAlignment(TextAlignment.CENTER).setBorderBottom(Border.NO_BORDER);
         shopNameCell.add(new Paragraph(CheckUtil.SHOP_NAME));
 
-        Cell dateCell = new Cell().setTextAlignment(TextAlignment.RIGHT);
+        Cell dateCell = new Cell().setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER);
         dateCell.add(new Paragraph(CheckUtil.getCurrentDate()));
 
-        Cell timeCell = new Cell().setTextAlignment(TextAlignment.RIGHT);
+        Cell timeCell = new Cell().setTextAlignment(TextAlignment.RIGHT).setBorderBottom(Border.NO_BORDER);
         timeCell.add(new Paragraph(CheckUtil.getCurrentTime()));
 
         Cell promotionCell = new Cell();
