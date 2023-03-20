@@ -45,6 +45,7 @@ nbdist/
 
 #Check output to file
 check.txt
+src/main/resources/pdf/check.pdf
 
 .gradle
 **/build/

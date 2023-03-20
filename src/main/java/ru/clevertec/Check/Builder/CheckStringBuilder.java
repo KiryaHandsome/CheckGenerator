@@ -52,8 +52,8 @@ public class CheckStringBuilder implements CheckBuilder {
                     qty,
                     product.getName(),
                     product.isPromotional() ? "y" : "n",
-                    Math.round(product.getPrice() * 100.0) / 100.0,
-                    Math.round(price * 100.0) / 100.0 + "\n"));
+                    CheckUtil.getRoundedPrice(product.getPrice()),
+                    CheckUtil.getPromotionalPrice(product, qty) + "\n"));
         }
     }
 
