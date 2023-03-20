@@ -1,20 +1,22 @@
 package ru.clevertec.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.clevertec.Model.Check;
+import ru.clevertec.Check.Builder.CheckPdfBuilder;
 import ru.clevertec.Check.CheckGenerator;
+import ru.clevertec.Check.CheckUtil;
 import ru.clevertec.CommandLineParser;
 import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
+import ru.clevertec.Model.Check;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 @RestController
@@ -29,29 +31,32 @@ public class CheckController {
 
     @GetMapping
     public String getCheck(@RequestParam Map<String, String> allParams) {
-        String[] args = allParams.entrySet()
-                .stream()
-                .map(e -> e.getKey() + "-" + e.getValue())
-                .toArray(String[]::new);
+        String[] args = CheckUtil.parseParams(allParams);
         Map<Integer, Integer> info = CommandLineParser.parseArguments(args);
         String checkContent;
         try {
             checkContent = checkGenerator.generateCheck(info).toString();
-            checkGenerator.saveCheckToFile("check.txt", checkContent);
+            checkGenerator.saveCheckToFile(checkContent);
         } catch (DiscountCardAlreadyPresentedException | IOException e) {
             return e.getMessage();
         }
         return checkContent;
     }
 
-    @GetMapping("/pdf")
-    public ResponseEntity<?> getCheckPdf() throws FileNotFoundException {
-//        File file = new File("E:\\tmp\\test.pdf");
-//        FileInputStream fileInputStream = new FileInputStream(file);
-//        javax.ws.rs.core.Response.ResponseBuilder responseBuilder = javax.ws.rs.core.Response.ok((Object) fileInputStream);
-//        responseBuilder.type("application/pdf");
-//        responseBuilder.header("Content-Disposition", "filename=test.pdf");
-//        return responseBuilder.build();
-        return null;
+    @GetMapping(value = "/pdf", produces = "application/pdf")
+    public ResponseEntity<byte[]> getCheckPdf(@RequestParam Map<String, String> allParams) throws IOException {
+        String[] args = CheckUtil.parseParams(allParams);
+        Map<Integer, Integer> info = CommandLineParser.parseArguments(args);
+        Check check;
+        try {
+            check = checkGenerator.generateCheck(info);
+        } catch (DiscountCardAlreadyPresentedException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        CheckPdfBuilder pdfBuilder = new CheckPdfBuilder();
+        String filePath = pdfBuilder.buildCheck(check.getProducts(), check.getDiscountCard());
+        byte[] content = Files.readAllBytes(Path.of(filePath));
+        return new ResponseEntity<>(content, HttpStatus.OK);
     }
 }

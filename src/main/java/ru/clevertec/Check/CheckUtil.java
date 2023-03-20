@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public class CheckUtil {
     public static final String CASH_RECEIPT = "CASH RECEIPT";
@@ -53,4 +54,12 @@ public class CheckUtil {
     public static String priceToString(double price) {
         return decimalFormat.format(price) + CURRENCY_SYMBOL;
     }
+
+    public static String[] parseParams(Map<String, String> params) {
+        return params.entrySet()
+                .stream()
+                .map(e -> e.getKey() + "-" + e.getValue())
+                .toArray(String[]::new);
+    }
+
 }

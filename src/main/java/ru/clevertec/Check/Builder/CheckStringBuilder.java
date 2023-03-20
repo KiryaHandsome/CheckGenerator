@@ -34,7 +34,7 @@ public class CheckStringBuilder implements CheckBuilder {
         addProductsToCheck(products);
         checkBuilder.append(CheckUtil.getDelimiter(checkWidth)) //delimiter
                 .append(String.format("COST:%" +
-                        (checkWidth - 5) + ".2f\n", totalCost));  //5-len of 'cost:' string
+                        (checkWidth - 6) + ".2f" + CheckUtil.CURRENCY_SYMBOL + "\n", totalCost));  //5-len of 'cost:' string
         if (discountCard != null) {
             int discount = (int) (discountCard.getDiscount() * 100);
             totalCost = totalCost * (1 - discountCard.getDiscount());
@@ -42,7 +42,7 @@ public class CheckStringBuilder implements CheckBuilder {
                     (checkWidth - 10) + "d%%\n", discount)); //10-len of 'discount:%' string
         }
         checkBuilder.append(String.format("TOTAL COST:%" +
-                (checkWidth - 11) + ".2f\n", totalCost));  //11-len of 'total cost:' string
+                (checkWidth - 12) + ".2f" + CheckUtil.CURRENCY_SYMBOL + "\n", totalCost));  //11-len of 'total cost:' string
         return checkBuilder.toString();
     }
 

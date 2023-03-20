@@ -25,8 +25,9 @@ public class CommandLineParser implements CommandLineRunner {
         try {
             Map<Integer, Integer> map = parseArguments(args);
             Check check = checkGenerator.generateCheck(map);
-            System.out.println(check.toString());
-            //checkGenerator.saveCheckToFile("check.txt");
+            String checkContent = check.toString();
+            System.out.println(checkContent);
+            checkGenerator.saveCheckToFile(checkContent);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

@@ -31,4 +31,12 @@ public class Check {
         CheckStringBuilder builder = new CheckStringBuilder(settings);
         return builder.buildCheck(products, discountCard);
     }
+
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
+
+    public DiscountCard getDiscountCard() {
+        return discountCard;
+    }
 }

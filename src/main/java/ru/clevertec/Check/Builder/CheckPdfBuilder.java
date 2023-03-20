@@ -18,25 +18,24 @@ import ru.clevertec.Model.DiscountCard;
 import ru.clevertec.Model.Product;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 public class CheckPdfBuilder implements CheckBuilder {
     private static final int PADDING = 5;
     private static final String templatePath = "src/main/resources/pdf/Clevertec_template.pdf";
-    private static final String outputPath = "src/main/resources/pdf/check.pdf";
+    private static final String outputPath = "data/check.pdf";
 
     private double totalCost;
 
-    public CheckPdfBuilder() {
-
-    }
-
     @Override
-    public Object buildCheck(Map<Product, Integer> products, DiscountCard discountCard) {
+    public String buildCheck(Map<Product, Integer> products, DiscountCard discountCard) {
         PdfDocument pdfDocument;
         Document document;
         try {
+            Files.createDirectories(Paths.get("data"));
             pdfDocument = new PdfDocument(new PdfReader(templatePath), new PdfWriter(outputPath));
             document = new Document(pdfDocument);
         } catch (IOException e) {
@@ -57,7 +56,7 @@ public class CheckPdfBuilder implements CheckBuilder {
 
         document.add(resultTable);
         document.close();
-        return null;
+        return outputPath;
     }
 
     /**
@@ -89,32 +88,28 @@ public class CheckPdfBuilder implements CheckBuilder {
     private List<Cell> createProductRow(Product product, int quantity) {
         Cell quantityCell = new Cell()
                 .setBorder(Border.NO_BORDER)
-                .setBorderRight(new DashedBorder(1));
-        quantityCell.add(new Paragraph(String.valueOf(quantity)));
-
+                .setBorderRight(new DashedBorder(1))
+                .add(new Paragraph(String.valueOf(quantity)));
         Cell nameCell = new Cell()
                 .setBorder(Border.NO_BORDER)
-                .setBorderRight(new DashedBorder(1));
-        nameCell.add(new Paragraph(product.getName()));
-
+                .setBorderRight(new DashedBorder(1))
+                .add(new Paragraph(product.getName()));
         Cell promCell = new Cell()
                 .setTextAlignment(TextAlignment.CENTER)
                 .setBorder(Border.NO_BORDER)
-                .setBorderRight(new DashedBorder(1));
-        promCell.add(new Paragraph(product.isPromotional() ? "y" : "n"));
-
+                .setBorderRight(new DashedBorder(1))
+                .add(new Paragraph(product.isPromotional() ? "y" : "n"));
         Cell priceCell = new Cell()
                 .setTextAlignment(TextAlignment.RIGHT)
                 .setBorder(Border.NO_BORDER)
-                .setBorderRight(new DashedBorder(1));
-        priceCell.add(new Paragraph(CheckUtil.priceToString(product.getPrice())));
-
-        Cell totalPriceCell = new Cell()
-                .setTextAlignment(TextAlignment.RIGHT)
-                .setBorder(Border.NO_BORDER);
+                .setBorderRight(new DashedBorder(1))
+                .add(new Paragraph(CheckUtil.priceToString(product.getPrice())));
         double priceWithPromotion = CheckUtil.getPromotionalPrice(product, quantity);
         String stringPriceWithPromotion = CheckUtil.priceToString(priceWithPromotion);
-        totalPriceCell.add(new Paragraph(stringPriceWithPromotion));
+        Cell totalPriceCell = new Cell()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setBorder(Border.NO_BORDER)
+                .add(new Paragraph(stringPriceWithPromotion));
         return List.of(quantityCell, nameCell, promCell, priceCell, totalPriceCell);
     }
 
@@ -123,25 +118,23 @@ public class CheckPdfBuilder implements CheckBuilder {
      * like qty, description, total and others
      */
     private List<Cell> createNamingCells() {
-        Cell quantityCell = setUpNamingCell(new Cell()).setBorderLeft(Border.NO_BORDER);
-        quantityCell.add(new Paragraph(CheckUtil.QUANTITY));
-
-        Cell nameCell = setUpNamingCell(new Cell());
-        nameCell.add(new Paragraph(CheckUtil.DESCRIPTION));
-
-        Cell promCell = setUpNamingCell(new Cell());
-        promCell.add(new Paragraph(CheckUtil.PROMOTIONAL));
-
-        Cell priceCell = setUpNamingCell(new Cell());
-        priceCell.add(new Paragraph(CheckUtil.PRICE));
-
-        Cell totalPriceCell = setUpNamingCell(new Cell()).setBorderRight(Border.NO_BORDER);
-        totalPriceCell.add(new Paragraph(CheckUtil.TOTAL));
+        Cell quantityCell = setUpNamingCell()
+                .setBorderLeft(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.QUANTITY));
+        Cell nameCell = setUpNamingCell()
+                .add(new Paragraph(CheckUtil.DESCRIPTION));
+        Cell promCell = setUpNamingCell()
+                .add(new Paragraph(CheckUtil.PROMOTIONAL));
+        Cell priceCell = setUpNamingCell()
+                .add(new Paragraph(CheckUtil.PRICE));
+        Cell totalPriceCell = setUpNamingCell()
+                .setBorderRight(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.TOTAL));
         return List.of(quantityCell, nameCell, promCell, priceCell, totalPriceCell);
     }
 
-    private Cell setUpNamingCell(Cell cell) {
-        return cell.setTextAlignment(TextAlignment.CENTER)
+    private Cell setUpNamingCell() {
+        return new Cell().setTextAlignment(TextAlignment.CENTER)
                 .setBorder(Border.NO_BORDER)
                 .setBorderRight(new DashedBorder(1))
                 .setBorderBottom(new DashedBorder(1));
@@ -153,24 +146,32 @@ public class CheckPdfBuilder implements CheckBuilder {
      * @return list of cells for header
      */
     private List<Cell> createHeaderCells() {
-        Cell cashReceiptCell = new Cell().setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER);
-        cashReceiptCell.add(new Paragraph(CheckUtil.CASH_RECEIPT));
-
-        Cell shopNameCell = new Cell().setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER);
-        shopNameCell.add(new Paragraph(CheckUtil.SHOP_NAME));
-
-        Cell dateCell = new Cell().setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER);
-        dateCell.add(new Paragraph(CheckUtil.getCurrentDate()));
-
-        Cell timeCell = new Cell().setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER);
-        timeCell.add(new Paragraph(CheckUtil.getCurrentTime()));
-
-        Cell promotionCell = new Cell().setBorder(new DashedBorder(1));
-        promotionCell.add(new Paragraph(CheckUtil.PROMOTION_CLAUSE));
+        Cell cashReceiptCell = new Cell()
+                .setTextAlignment(TextAlignment.CENTER)
+                .setBorder(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.CASH_RECEIPT));
+        Cell shopNameCell = new Cell()
+                .setTextAlignment(TextAlignment.CENTER)
+                .setBorder(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.SHOP_NAME));
+        Cell dateCell = new Cell()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setBorder(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.getCurrentDate()));
+        Cell timeCell = new Cell()
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setBorder(Border.NO_BORDER)
+                .add(new Paragraph(CheckUtil.getCurrentTime()));
+        Cell promotionCell = new Cell()
+                .setBorder(new DashedBorder(1))
+                .add(new Paragraph(CheckUtil.PROMOTION_CLAUSE));
 
         return List.of(cashReceiptCell, shopNameCell, dateCell, timeCell, promotionCell);
     }
 
+    /**
+     * Generates table with total cost output
+     */
     private Table createTotalTable(DiscountCard discountCard) {
         Table totalTable = new Table(2);
         Cell costCell = new Cell()
@@ -186,7 +187,7 @@ public class CheckPdfBuilder implements CheckBuilder {
                 .setBorder(Border.NO_BORDER)
                 .add(new Paragraph(CheckUtil.DISCOUNT));
         int discount = 0;
-        if(discountCard != null) {
+        if (discountCard != null) {
             discount = (int) (discountCard.getDiscount() * 100);
             totalCost = totalCost * (1 - discountCard.getDiscount());
         }
@@ -205,7 +206,6 @@ public class CheckPdfBuilder implements CheckBuilder {
 
         List<Cell> cells = List.of(costCell, costDataCell, discountCell,
                 discountDataCell, totalCostCell, totalCostDataCell);
-
         cells.forEach(totalTable::addCell);
         return totalTable;
     }

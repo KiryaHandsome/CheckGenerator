@@ -13,12 +13,15 @@ import ru.clevertec.Service.Implementation.ProductService;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @Component
 public class CheckGenerator {
-    final private ProductService productService;
-    final private DiscountCardService discountCardService;
+    private final ProductService productService;
+    private final DiscountCardService discountCardService;
+    private final String TXT_FILE_PATH = "data/check.txt";
 
     @Autowired
     public CheckGenerator(ProductService productService,
@@ -48,8 +51,9 @@ public class CheckGenerator {
         return check;
     }
 
-    public void saveCheckToFile(String fileName, String checkContent) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+    public void saveCheckToFile(String checkContent) throws IOException {
+        Files.createDirectories(Paths.get("data"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(TXT_FILE_PATH));
         writer.write(checkContent);
         writer.close();
     }
