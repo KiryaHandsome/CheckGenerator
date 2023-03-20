@@ -50,4 +50,7 @@ to begin of url path like this `localhost:8080/xml/products`
 
 ## Cache
 Two cache algorithms were implemented: `LRU` (The Least Recently Used) and `LFU` (The Least Frequency Used).
-You can use annotations `@Cacheable`, `@CachePut` and `@CacheEvict` for your service 
+`@Cacheable`, `@CachePut` and `@CacheEvict` are used to manipulate elements in cache. 
+
+## Output examples
+![File output](http://url/to/img.png)
