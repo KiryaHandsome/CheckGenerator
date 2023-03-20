@@ -53,4 +53,5 @@ Two cache algorithms were implemented: `LRU` (The Least Recently Used) and `LFU`
 `@Cacheable`, `@CachePut` and `@CacheEvict` are used to manipulate elements in cache. 
 
 ## Output examples
-![File output](http://url/to/img.png)
+![TextFileOutput](images/pdfCheckExample.jpg)
+![PdfFileOutput](images/txtCheckExample.jpg)
