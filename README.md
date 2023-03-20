@@ -16,22 +16,23 @@ CheckGenerator present a program that can shape the cash-receipt, manipulate dat
 * PostgreSQL 15---|
 * Spring Boot
 * Spring Data JPA
+* Mockito
+* JUnit
+* AssertJ
 
 ## How to use:
-1. clone this repository
-```git clone https://github.com/KiryaHandsome/CheckGenerator.git```
+1. clone this repository ```git clone https://github.com/KiryaHandsome/CheckGenerator.git```
 2. run PostgreSQL process
 3. configure `src/main/resources/application.properties` file accordingly your db information
-3. go to root directory of project 
-4. run
-```gradle bootRun```
-5. connect to port 8080 and use api
+4. go to root directory of project 
+5. run ```./gradlew bootRun```
+6. connect to port 8080 and use api
 
 You can pass arguments in command line in the next format:
 ```prodId-qty ... card-discCardId```
 
 Example:
-```gradle bootRun --args="12-3 5-9"``` or with discount ```gradle bootRun --args="12-3 card-123"```
+```./gradlew bootRun --args="12-3 5-9"``` or with discount ```./gradlew bootRun --args="12-3 card-123"```
 
 Last created check is always saved to file check.txt in the root directory.
 
@@ -49,7 +50,7 @@ Implemented rest api with next methods:
 | `/discount-card/{id}` | `DELETE` | delete discount card by id | `id` |
 | `/discount-card/create` | `POST` | add discount card | request body with field `discount` |
 
-Also you may get prodcut information in xml format. To do it just add `/xml`
+Also, you may get prodcut information in xml format. To do it just add `/xml`
 to begin of url path like this `localhost:8080/xml/products`
 
 ## Cache
