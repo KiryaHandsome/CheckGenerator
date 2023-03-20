@@ -13,11 +13,15 @@ public class CheckUtil {
     public static final String PROMOTION_CLAUSE = "PROM. - promotional product;\n" +
             "If quantity of promotional product > 5 \n" +
             "then u get discount 10% on this position!\n\n";
-
     public static final char CURRENCY_SYMBOL = '$';
-
-    public static final String[] PRODUCT_FIELDS = {"QTY", "DESCRIPTION", "PROM.", "PRICE", "TOTAL"};
-
+    public static final String QUANTITY = "QTY";
+    public static final String PROMOTIONAL = "PROM.";
+    public static final String PRICE = "PRICE";
+    public static final String TOTAL = "TOTAL";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String COST = "COST";
+    public static final String TOTAL_COST = "TOTAL COST";
+    public static final String DISCOUNT = "DISCOUNT";
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public static String getCurrentDate() {
@@ -42,13 +46,11 @@ public class CheckUtil {
         return "*".repeat(checkWidth) + '\n';
     }
 
-    public static String getPromotionalPrice(Product product, int quantity) {
-        double price = product.getPrice() * quantity
-                * (product.isPromotional() && (quantity > 5) ? 0.9 : 1);
-        return decimalFormat.format(price) + CURRENCY_SYMBOL;
+    public static double getPromotionalPrice(Product product, int quantity) {
+        return product.getPrice() * quantity * (product.isPromotional() && (quantity > 5) ? 0.9 : 1);
     }
 
-    public static String getRoundedPrice(double price) {
+    public static String priceToString(double price) {
         return decimalFormat.format(price) + CURRENCY_SYMBOL;
     }
 }

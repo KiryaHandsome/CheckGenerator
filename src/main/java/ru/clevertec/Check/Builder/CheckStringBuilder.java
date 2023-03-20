@@ -24,7 +24,12 @@ public class CheckStringBuilder implements CheckBuilder {
         productTemplate = createProductTemplate();
         checkBuilder = new StringBuilder();
         checkBuilder.append(shapeHeaderText(checkWidth))
-                .append(String.format(productTemplate, "QTY", "DESCRIPTION", "PROM.", "PRICE", "TOTAL\n"))
+                .append(String.format(productTemplate,
+                        CheckUtil.QUANTITY,
+                        CheckUtil.DESCRIPTION,
+                        CheckUtil.PROMOTIONAL,
+                        CheckUtil.PRICE,
+                        CheckUtil.TOTAL + "\n"))
                 .append(CheckUtil.getDelimiter(checkWidth)); //delimiter
         addProductsToCheck(products);
         checkBuilder.append(CheckUtil.getDelimiter(checkWidth)) //delimiter
@@ -46,14 +51,14 @@ public class CheckStringBuilder implements CheckBuilder {
         for (Map.Entry<Product, Integer> pair : products.entrySet()) {
             Product product = pair.getKey();
             int qty = pair.getValue();
-            double price = product.getPrice() * qty * (product.isPromotional() && (qty > 5) ? 0.9 : 1);
-            totalCost += price;
+            double priceWithPromotion = CheckUtil.getPromotionalPrice(product, qty);
+            totalCost += priceWithPromotion;
             checkBuilder.append(String.format(productTemplate,
                     qty,
                     product.getName(),
                     product.isPromotional() ? "y" : "n",
-                    CheckUtil.getRoundedPrice(product.getPrice()),
-                    CheckUtil.getPromotionalPrice(product, qty) + "\n"));
+                    CheckUtil.priceToString(product.getPrice()),
+                    CheckUtil.priceToString(priceWithPromotion) + "\n"));
         }
     }
 
