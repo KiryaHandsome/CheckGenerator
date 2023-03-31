@@ -6,36 +6,38 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LRUCache implements Cache {
+
     /**
      * Storage for cache.
      * LinkedHashMap implements access order
      * that's why is the best approach to use it in LRU cache
-     * */
+     */
     private LinkedHashMap<Integer, Object> cache;
-    private final int CAPACITY;
+    private final int capacity;
 
     /**
      * @param capacity max size of cache
      * @throws IllegalArgumentException when passed capacity less than 1
-     * Override LinkedHashMap.removeEldestEntry in way
-     * that it will remove the least recently used object
-     * when size becomes more than capacity
+     *                                  Override LinkedHashMap.removeEldestEntry in way
+     *                                  that it will remove the least recently used object
+     *                                  when size becomes more than capacity
      */
     public LRUCache(int capacity) {
-        if(capacity <= 0) {
+        if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be natural");
         }
-        this.CAPACITY = capacity;
-        cache = new LinkedHashMap<>(CAPACITY, 0.75f, true) {
+        this.capacity = capacity;
+        cache = new LinkedHashMap<>(LRUCache.this.capacity, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry eldest) {
-                return size() > CAPACITY;
+                return size() > LRUCache.this.capacity;
             }
         };
     }
 
     /**
      * Get object from cache
+     *
      * @param id of desired object
      * @return instance if object in cache, null otherwise
      */
@@ -48,9 +50,10 @@ public class LRUCache implements Cache {
      * Put object to cache if it doesn't contain such,
      * otherwise update it in cache.
      * If size == capacity, it removes the least frequently used object
-     * @param id id of stored object
+     *
+     * @param id     id of stored object
      * @param object object to store
-     * */
+     */
     @Override
     public void put(int id, Object object) {
         cache.put(id, object);
@@ -58,9 +61,10 @@ public class LRUCache implements Cache {
 
     /**
      * Remove object from cache by id
+     *
      * @param id id object that will be deleted
-     * Do nothing if there is no object with such id
-     * */
+     *           Do nothing if there is no object with such id
+     */
     @Override
     public void delete(int id) {
         cache.remove(id);

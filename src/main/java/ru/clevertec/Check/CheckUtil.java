@@ -1,5 +1,6 @@
 package ru.clevertec.Check;
 
+import org.apache.commons.lang3.StringUtils;
 import ru.clevertec.Model.Product;
 
 import java.text.DecimalFormat;
@@ -9,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class CheckUtil {
+
     public static final String CASH_RECEIPT = "CASH RECEIPT";
     public static final String SHOP_NAME = "Clevertec SHOP";
     public static final String PROMOTION_CLAUSE = "PROM. - promotional product;\n" +
@@ -40,11 +42,12 @@ public class CheckUtil {
     }
 
     public static String getSpacesToPlaceInCenter(int checkWidth, String s) {
-        return " ".repeat((checkWidth - s.length()) / 2);
+        int count = (checkWidth - s.length()) / 2;
+        return StringUtils.repeat(' ', count);
     }
 
     public static String getDelimiter(int checkWidth) {
-        return "*".repeat(checkWidth) + '\n';
+        return StringUtils.repeat("*", checkWidth) + '\n';
     }
 
     public static double getPromotionalPrice(Product product, int quantity) {

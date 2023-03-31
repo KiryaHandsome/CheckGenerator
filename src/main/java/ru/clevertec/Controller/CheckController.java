@@ -1,5 +1,6 @@
 package ru.clevertec.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/check")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CheckController {
-    final private CheckGenerator checkGenerator;
 
-    @Autowired
-    public CheckController(CheckGenerator checkGenerator) {
-        this.checkGenerator = checkGenerator;
-    }
+    private final CheckGenerator checkGenerator;
 
     @GetMapping
     public String getCheck(@RequestParam Map<String, String> allParams) {
@@ -43,6 +41,9 @@ public class CheckController {
         return checkContent;
     }
 
+    /**
+     * @return pdf document of check built from parameters
+     */
     @GetMapping(value = "/pdf", produces = "application/pdf")
     public ResponseEntity<byte[]> getCheckPdf(@RequestParam Map<String, String> allParams) throws IOException {
         String[] args = CheckUtil.parseParams(allParams);

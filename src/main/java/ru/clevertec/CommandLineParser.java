@@ -12,6 +12,7 @@ import java.util.Map;
 
 @Component
 public class CommandLineParser implements CommandLineRunner {
+
     private final CheckGenerator checkGenerator;
 
     @Autowired
@@ -36,6 +37,7 @@ public class CommandLineParser implements CommandLineRunner {
     /**
      * if value of returned map equals to 0, key - discount card id
      * Arguments should be given in format 'id-qty ... card-id'
+     *
      * @return map: key - id, value - quantity
      **/
     public static Map<Integer, Integer> parseArguments(String... args) {

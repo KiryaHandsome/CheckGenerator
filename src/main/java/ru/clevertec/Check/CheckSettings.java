@@ -7,12 +7,15 @@ import java.util.Map;
 
 /**
  * CheckSettings - class which contains
- **/
+ */
 public class CheckSettings {
-    private Map<Product, Integer> products;
+
+    private final Map<Product, Integer> products;
     private int maxNameLength;
     private int maxPriceLength;
     private int maxQuantityLength;
+
+    private static final int PROMOTIONAL_LABEL_WIDTH = 5;
 
     public CheckSettings(Map<Product, Integer> products) {
         this.products = products;
@@ -28,11 +31,15 @@ public class CheckSettings {
     }
 
     public int getDescriptionWidth() {
-        return Math.max(maxNameLength, 11) + 1;
+        int minNameLength = 11;
+        int descriptionCorrector = 1;
+        return Math.max(maxNameLength, minNameLength) + descriptionCorrector;
     }
 
     public int getPriceWidth() {
-        return Math.max(maxPriceLength, 5) + 5;
+        int minPriceLength = 5;
+        int priceWidthCorrector = 5;
+        return Math.max(maxPriceLength, minPriceLength) + priceWidthCorrector;
     }
 
     public int getQuantityWidth() {
@@ -40,23 +47,27 @@ public class CheckSettings {
     }
 
     public int getTotalWidth() {
-        return getPriceWidth() + 3;
+        int widthCorrector = 3;
+        return getPriceWidth() + widthCorrector;
     }
 
     public int getPromotionalWidth() {
-        return 5;
+        int promotionalLabelWidth = 5;
+        return promotionalLabelWidth;
     }
 
     public int getCheckWidth() {
+        int checkWidthCorrector = 2;
         return getQuantityWidth() +
                 getDescriptionWidth() +
                 getPriceWidth() +
                 getTotalWidth() +
-                getPromotionalWidth() + 2;
+                getPromotionalWidth() + checkWidthCorrector;
     }
 
     public int getDateAndTimeWidth() {
-        return getCheckWidth() - 13;
+        int dateAndTimeLength =  13;
+        return getCheckWidth() - dateAndTimeLength;
     }
 
 }

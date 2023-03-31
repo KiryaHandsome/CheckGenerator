@@ -9,6 +9,7 @@ import ru.clevertec.Model.Product;
 import java.util.Map;
 
 public class CheckStringBuilder implements CheckBuilder {
+
     private final CheckSettings settings;
     private double totalCost;
     private StringBuilder checkBuilder;

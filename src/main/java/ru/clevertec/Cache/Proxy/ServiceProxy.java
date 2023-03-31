@@ -17,15 +17,17 @@ import java.util.Map;
 @Component
 @Aspect
 public class ServiceProxy {
+
     private Map<String, Cache> caches;
     private final int capacity;
     private final CacheType cacheType;
 
     /**
      * Constructor injects cache to field
+     *
      * @param cacheType algorithm implementation (LRU or LFU is available)
-     * @param capacity max size of cache storage. <br/>
-     * Params injected from application.yml file.
+     * @param capacity  max size of cache storage. <br/>
+     *                  Params injected from application.yml file.
      */
     public ServiceProxy(@Value("${cache.algorithm}") CacheType cacheType,
                         @Value("${cache.capacity}") int capacity) {
@@ -40,6 +42,7 @@ public class ServiceProxy {
      * i.e. get id and return entity(usual findById method).<br/>
      * Checks if cache contains object with passed id
      * then return value from cache, otherwise calls source method.
+     *
      * @return value from cache or from db
      */
     @Around("@annotation(ru.clevertec.Cache.Annotations.Cacheable))")
@@ -48,7 +51,7 @@ public class ServiceProxy {
         Cache cache = caches.computeIfAbsent(name, v -> CacheFactory.getCache(cacheType, capacity));
         int id = Integer.parseInt(pjp.getArgs()[0].toString());
         Object value = cache.get(id);
-        if(value == null) {
+        if (value == null) {
             try {
                 value = pjp.proceed();
                 cache.put(id, value);
@@ -80,6 +83,7 @@ public class ServiceProxy {
      * Advice before method with {@link ru.clevertec.Cache.Annotations.CacheEvict} annotation. <br/>
      * Method must follow next signature(name matching is unnecessary): {T delete(int id)}.<br/>
      * Removes value from cache.
+     *
      * @return value from cache or from db
      */
     @Before("@annotation(ru.clevertec.Cache.Annotations.CacheEvict))")

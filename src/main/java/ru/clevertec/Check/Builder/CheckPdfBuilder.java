@@ -24,12 +24,19 @@ import java.util.List;
 import java.util.Map;
 
 public class CheckPdfBuilder implements CheckBuilder {
+
     private static final int PADDING = 5;
     private static final String templatePath = "src/main/resources/pdf/Clevertec_template.pdf";
     private static final String outputPath = "data/check.pdf";
 
     private double totalCost;
 
+    /**
+     * Method builds pdf-document for check from given information
+     *
+     * @param products     information about products
+     * @param discountCard information about discount card
+     */
     @Override
     public String buildCheck(Map<Product, Integer> products, DiscountCard discountCard) {
         PdfDocument pdfDocument;

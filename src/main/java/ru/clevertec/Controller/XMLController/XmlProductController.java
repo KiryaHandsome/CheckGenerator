@@ -1,11 +1,11 @@
 package ru.clevertec.Controller.XMLController;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.ServerRequest;
 import ru.clevertec.Model.Product;
 import ru.clevertec.Service.Implementation.ProductService;
 
@@ -13,13 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/xml", produces = "application/xml")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class XmlProductController {
-    private final ProductService productService;
 
-    @Autowired
-    public XmlProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    private final ProductService productService;
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> loadAll() {

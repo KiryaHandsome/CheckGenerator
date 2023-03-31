@@ -1,6 +1,7 @@
 package ru.clevertec.Check;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.clevertec.Exception.DiscountCardAlreadyPresentedException;
@@ -18,17 +19,15 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CheckGenerator {
+
     private final ProductService productService;
     private final DiscountCardService discountCardService;
-    private final String TXT_FILE_PATH = "data/check.txt";
 
-    @Autowired
-    public CheckGenerator(ProductService productService,
-                          DiscountCardService discountCardService) {
-        this.productService = productService;
-        this.discountCardService = discountCardService;
-    }
+    private static final String DIRECTORY_NAME = "data";
+    private static final String FILE_NAME = "check.txt";
+    private static final String OUTPUT_PATH = DIRECTORY_NAME + "/" + FILE_NAME;
 
     private void addDataFromDb(Map<Integer, Integer> info, Check check)
             throws DiscountCardAlreadyPresentedException {
@@ -52,8 +51,8 @@ public class CheckGenerator {
     }
 
     public void saveCheckToFile(String checkContent) throws IOException {
-        Files.createDirectories(Paths.get("data"));
-        BufferedWriter writer = new BufferedWriter(new FileWriter(TXT_FILE_PATH));
+        Files.createDirectories(Paths.get(DIRECTORY_NAME));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(OUTPUT_PATH));
         writer.write(checkContent);
         writer.close();
     }

@@ -1,54 +1,25 @@
 package ru.clevertec.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
-import java.util.Objects;
-
-@Proxy(lazy = false)   //solution for LazyInitializationException
+@Proxy(lazy = false)
 @Entity
 @Table(name = "discount_card")
+@Data
 public class DiscountCard {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
     @Column(name = "discount")
     private float discount;
-
-    public DiscountCard() {
-    }
-
-    public DiscountCard(long id, float discount) {
-        this.id = id;
-        this.discount = discount;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DiscountCard that)) return false;
-        return id == that.id && Float.compare(that.discount, discount) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, discount);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public float getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(float discount) {
-        this.discount = discount;
-    }
 }

@@ -8,17 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Check {
-    private Map<Product, Integer> products = new HashMap<>();
-    private DiscountCard discountCard;
 
-    public Check() {}
+    private final Map<Product, Integer> products = new HashMap<>();
+    private DiscountCard discountCard;
 
     public void addProduct(Product product, int quantity) {
         products.put(product, quantity);
     }
 
     public void addDiscountCard(DiscountCard discountCard) throws DiscountCardAlreadyPresentedException {
-        if(this.discountCard != null) {
+        if (this.discountCard != null) {
             throw new DiscountCardAlreadyPresentedException(
                     "There are few discount cards in arguments");
         }

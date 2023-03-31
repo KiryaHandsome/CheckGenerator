@@ -29,7 +29,10 @@ dependencies {
 
     implementation 'com.itextpdf:itext7-core:7.2.5'
 
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 tasks.named('test') {

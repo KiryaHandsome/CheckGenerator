@@ -2,6 +2,7 @@ package ru.clevertec.Cache;
 
 
 public interface Cache {
+
     /**
      * @param id id of desired object
      * @return object from cache if it exists,

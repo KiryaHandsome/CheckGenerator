@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 public class ProductService implements ShopService<Product> {
+
     private JpaRepository<Product, Integer> repository;
 
     @Autowired

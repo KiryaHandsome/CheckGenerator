@@ -12,7 +12,8 @@ import java.util.List;
 
 @Service
 public class DiscountCardService implements ShopService<DiscountCard> {
-    private JpaRepository<DiscountCard, Integer> repository;
+
+    private final JpaRepository<DiscountCard, Integer> repository;
 
     @Autowired
     public DiscountCardService(DiscountCardRepository discountCardRepository) {

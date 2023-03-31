@@ -8,6 +8,7 @@ import ru.clevertec.Cache.Implementation.LRUCache;
  * Factory pattern implementation for Cache
  */
 public class CacheFactory {
+
     /**
      * @param type cache implementation
      * @param capacity max size of cache
