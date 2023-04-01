@@ -44,7 +44,7 @@ nbdist/
 .nb-gradle/
 
 #Check output to file
-check.txt
+data/
 
 .gradle
 **/build/
