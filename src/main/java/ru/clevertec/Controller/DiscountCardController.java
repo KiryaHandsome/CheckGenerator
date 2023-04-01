@@ -25,30 +25,43 @@ public class DiscountCardController {
     private final DiscountCardService discountCardService;
 
     @GetMapping("/discount-cards")
-    public List<DiscountCard> getAllDiscountCards() {
-        return discountCardService.findAll();
+    public ResponseEntity<List<DiscountCard>> getAllDiscountCards() {
+        List<DiscountCard> data = discountCardService.findAll();
+        HttpStatus status = HttpStatus.OK;
+        if (data == null) {
+            status = HttpStatus.NOT_FOUND;
+        }
+        return new ResponseEntity<>(data, status);
     }
 
     @GetMapping("/discount-card/{id}")
-    public DiscountCard getDiscountCardById(@PathVariable String id) {
-        return discountCardService.find(Integer.parseInt(id));
+    public ResponseEntity<DiscountCard> getDiscountCardById(@PathVariable String id) {
+        try {
+            DiscountCard data = discountCardService.find(Integer.parseInt(id));
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/discount-card/create")
-    public DiscountCard createDiscountCard(@RequestBody DiscountCard discountCard) {
-        return discountCardService.create(discountCard);
+    public ResponseEntity<DiscountCard> createDiscountCard(@RequestBody DiscountCard discountCard) {
+        DiscountCard data = discountCardService.create(discountCard);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @DeleteMapping("/discount-card/delete/{id}")
     public ResponseEntity<String> deleteDiscountCard(@PathVariable String id) {
         discountCardService.delete(Integer.parseInt(id));
-        return ResponseEntity.status(HttpStatus.OK).body("Discount card with id " + id + "" +
-                " either was deleted or wasn't in db");
+        return new ResponseEntity<>("Discount card with id " + id +
+                " either was deleted or wasn't in db", HttpStatus.OK);
     }
 
     @PutMapping("/discount-card/update/{id}")
-    public DiscountCard updateDiscountCard(@PathVariable String id,
-                                           @RequestBody DiscountCard discountCard) {
-        return discountCardService.update(Integer.parseInt(id), discountCard);
+    public ResponseEntity<DiscountCard> updateDiscountCard(
+            @PathVariable String id,
+            @RequestBody DiscountCard discountCard) {
+        DiscountCard data = discountCardService.update(Integer.parseInt(id), discountCard);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }

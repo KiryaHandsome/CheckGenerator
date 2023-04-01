@@ -28,17 +28,17 @@ public class CheckController {
     private final CheckGenerator checkGenerator;
 
     @GetMapping
-    public String getCheck(@RequestParam Map<String, String> allParams) {
-        String[] args = CheckUtil.parseParams(allParams);
-        Map<Integer, Integer> info = CommandLineParser.parseArguments(args);
+    public ResponseEntity<String> getCheck(@RequestParam Map<String, String> allParams) {
         String checkContent;
         try {
+            String[] args = CheckUtil.parseParams(allParams);
+            Map<Integer, Integer> info = CommandLineParser.parseArguments(args);
             checkContent = checkGenerator.generateCheck(info).toString();
             checkGenerator.saveCheckToFile(checkContent);
-        } catch (DiscountCardAlreadyPresentedException | IOException e) {
-            return e.getMessage();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return checkContent;
+        return new ResponseEntity<>(checkContent, HttpStatus.OK);
     }
 
     /**

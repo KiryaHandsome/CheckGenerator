@@ -2,7 +2,6 @@ package ru.clevertec.Controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,38 +26,37 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> loadAll() {
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(productService.findAll(), headers,
-                HttpStatus.CREATED);
+        List<Product> data = productService.findAll();
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @GetMapping("/product/{id}")
     public ResponseEntity<Product> productById(@PathVariable String id) {
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(productService.find(Integer.parseInt(id)), headers,
-                HttpStatus.CREATED);
+        try {
+            Product data = productService.find(Integer.parseInt(id));
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/product/delete/{id}")
     public ResponseEntity<String> removeProductById(@PathVariable String id) {
         productService.delete(Integer.parseInt(id));
-        return ResponseEntity.status(HttpStatus.OK).body("Product with id " + id + "" +
-                " either was deleted or wasn't in db");
+        return new ResponseEntity<>("Product with id " + id +
+                " either was deleted or wasn't in db", HttpStatus.OK);
     }
 
     @PostMapping("/product/create")
     public ResponseEntity<Product> create(@RequestBody Product product) {
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(productService.create(product), headers,
-                HttpStatus.CREATED);
+        Product data = productService.create(product);
+        return new ResponseEntity<>(data, HttpStatus.CREATED);
     }
 
     @PutMapping("/product/update/{id}")
-    public ResponseEntity<Product> updateDiscountCard(
-            @PathVariable String id,
-            @RequestBody Product product) {
-        HttpHeaders headers = new HttpHeaders();
-        return new ResponseEntity<>(productService.update(Integer.parseInt(id), product), headers,
-                HttpStatus.CREATED);
+    public ResponseEntity<Product> updateDiscountCard(@PathVariable String id,
+                                                      @RequestBody Product product) {
+        Product data = productService.update(Integer.parseInt(id), product);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }
