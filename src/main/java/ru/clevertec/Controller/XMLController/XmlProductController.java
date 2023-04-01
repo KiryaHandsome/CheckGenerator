@@ -35,7 +35,7 @@ public class XmlProductController {
     @DeleteMapping("/product/delete/{id}")
     public ResponseEntity<String> removeProductById(@PathVariable String id) {
         productService.delete(Integer.parseInt(id));
-        return ResponseEntity.status(HttpStatus.OK).body("Product with id " + id + "" +
+        return ResponseEntity.status(HttpStatus.OK).body("Product with id " + id +
                 " either was deleted or wasn't in db");
     }
 

@@ -13,11 +13,11 @@ class ProductBuilderTest {
         double price = 889.12;
         boolean isPromotional = false;
         Product expectedProduct = new Product(id, name, price, isPromotional);
-        Product actualProduct = new Product().getBuilder()
-                .setId(id)
-                .setName(name)
-                .setPrice(price)
-                .setPromotional(isPromotional)
+        Product actualProduct = Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .isPromotional(isPromotional)
                 .build();
         assertEquals(expectedProduct, actualProduct);
     }
@@ -29,10 +29,11 @@ class ProductBuilderTest {
         double price = 19123.11;
         boolean isPromotional = false;
         Product expectedProduct = new Product(id, name, price, isPromotional);
-        Product actualProduct = new Product().getBuilder()
-                .setId(id)
-                .setPrice(price)
-                .setPromotional(isPromotional)
+        Product actualProduct = Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .isPromotional(isPromotional)
                 .build();
         assertEquals(expectedProduct, actualProduct);
     }
@@ -40,7 +41,7 @@ class ProductBuilderTest {
     @Test
     public void buildObjectWithNullFieldsTest() {
         Product expectedProduct = new Product();
-        Product actualProduct = new Product().getBuilder()
+        Product actualProduct = Product.builder()
                 .build();
         assertEquals(expectedProduct, actualProduct);
     }

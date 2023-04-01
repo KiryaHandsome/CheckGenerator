@@ -38,10 +38,10 @@ class LRUCacheTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 11, 88, 99, Integer.MAX_VALUE})
     void checkGetShouldReturnProduct(int id) {
-        Product expectedProduct = new Product().getBuilder()
-                .setPrice(88)
-                .setPromotional(true)
-                .setName("Name")
+        Product expectedProduct = Product.builder()
+                .price(88)
+                .isPromotional(true)
+                .name("Name")
                 .build();
         productCacheManager.put(id, expectedProduct);
         Product actual = (Product) productCacheManager.get(id);

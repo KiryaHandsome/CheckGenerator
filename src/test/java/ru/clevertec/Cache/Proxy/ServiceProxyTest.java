@@ -17,11 +17,11 @@ class ServiceProxyTest {
 
     @Test
     void checkCreateShouldReturnCreatedValue() {
-        Product product = new Product().getBuilder()
-                .setId(123)
-                .setPrice(123.123)
-                .setName("name")
-                .setPromotional(false)
+        Product product = Product.builder()
+                .id(123)
+                .price(123.123)
+                .name("name")
+                .isPromotional(false)
                 .build();
         Product actualProduct = productService.create(product);
         Product productFromCache = productService.find(123);

@@ -28,7 +28,7 @@ class DiscountCardServiceTest {
 
     @BeforeEach
     public void setup(){
-        discountCard = new DiscountCard(1, 0.5f);
+        discountCard = new DiscountCard();
     }
 
     @Test
@@ -64,7 +64,7 @@ class DiscountCardServiceTest {
 
     @Test
     void checkFindAllShouldReturnSameListAsService() {
-        List<DiscountCard> expectedList = List.of(new DiscountCard(12, 44));
+        List<DiscountCard> expectedList = List.of(new DiscountCard());
         when(repository.findAll()).thenReturn(expectedList);
         List<DiscountCard> actualList = service.findAll();
         verify(repository).findAll();

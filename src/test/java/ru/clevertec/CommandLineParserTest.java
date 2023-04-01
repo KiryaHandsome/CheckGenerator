@@ -35,16 +35,6 @@ class CommandLineParserTest {
     private CommandLineParser commandLineParser;
 
     @Test
-    void checkRunShouldCallParseArgumentsOnce()
-            throws IOException {
-//        commandLineParser.run("");
-//        verify(checkGenerator).parseArguments(any());
-//        verify(checkGenerator).getProductsFromDb(any());
-//        verify(checkGenerator).generateCheck(any());
-//        verify(checkGenerator).saveCheckToFile("check.txt");
-    }
-
-    @Test
     void checkParseArgumentsShouldReturnCorrectMap() {
         String[] arguments = {"12-5", "13-4", "90-1"};
         Map<Integer, Integer> expectedMap = new HashMap<>();
